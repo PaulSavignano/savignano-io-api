@@ -24,12 +24,10 @@ import users from './routes/users'
 const app = express()
 const port = process.env.PORT
 
-app.use(helmet())
 app.use(cors())
 app.use(forceSSL)
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(expressValidator())
 
 app.use('/api/addresses', addresses)
 app.use('/api/articles', articles)
