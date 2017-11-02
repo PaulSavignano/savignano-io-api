@@ -55,8 +55,8 @@
     "prestart": "npm run -s build",
     "build": "npm run clean && babel api -d build",
     "heroku-postbuild": "yarn build",
-    "start:prod": "node build/index.js",
-    "start": "nodemon -r babel-register api/index.js",
+    "start": "node build/index.js",
+    "start-dev": "nodemon -r babel-register api/index.js",
     "test-watch": "nodemon --exec 'npm test'",
     "test": "export NODE_ENV=test && mocha **/**/*.test.js --compilers js:babel-register"
   }
