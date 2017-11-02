@@ -1,0 +1,13 @@
+{
+    "env": {
+        "mocha": true,
+        "node": true,
+    },
+    "parserOptions": {
+      "ecmaFeatures": {
+          "experimentalObjectRestSpread": true,
+          "jsx": true
+      },
+    "sourceType": "module"
+  },
+}
