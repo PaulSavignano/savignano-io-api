@@ -25,7 +25,7 @@ const app = express()
 const port = process.env.PORT
 
 app.use(cors())
-app.use(forceSSL)
+
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -42,7 +42,10 @@ app.use('/api/products', products)
 app.use('/api/sections', sections)
 app.use('/api/users', users)
 
+console.log('past routes')
+
 app.get('/', (req, res) => {
+  console.log('inside get req')
   res.send(`
     <div style="display: flex; flex-flow: column; justify-content: center; align-items: center; height: 85vh;">
       <h1 style="font-weight: 300;">Savignano.io API</h1>
