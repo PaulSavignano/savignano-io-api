@@ -33,7 +33,8 @@ export const add = (req, res) => {
 }
 
 export const get = async (req, res) => {
-  console.log('attempting to get pages')
+  console.log('req ip', req.ip)
+  console.log('req headers x-forwarded-for', req.headers['x-forwarded-for'])
   const { hostname } = req
   try {
     const pages = await Page.find({ hostname })
