@@ -14,7 +14,6 @@ export const add = (req, res) => {
     },
     hostname,
   } = req
-  console.log(req.body)
   Page.findOne({ 'values.name': name, hostname })
   .then(page => {
     if (!page) {

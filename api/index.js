@@ -5,6 +5,7 @@ import mongoose from './db/mongoose'
 import cors from 'cors'
 import expressValidator from 'express-validator'
 import helmet from 'helmet'
+import dns from 'dns'
 
 import addresses from './routes/addresses'
 import articles from './routes/articles'
@@ -25,7 +26,6 @@ const app = express()
 const port = process.env.PORT
 
 app.use(cors())
-
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({ extended: false }))
 

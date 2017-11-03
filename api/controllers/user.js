@@ -65,6 +65,8 @@ export const add = async (req, res) => {
 
 
 export const get = (req, res) => {
+  console.log('req ip' req.ip)
+  console.log('req headers x-forwarded-for', req.headers['x-forwarded-for'])
   const {
     hostname,
     user
