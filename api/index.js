@@ -20,6 +20,7 @@ import products from './routes/products'
 import sections from './routes/sections'
 import users from './routes/users'
 
+console.log('testing git development branch')
 
 const app = express()
 const port = process.env.PORT
