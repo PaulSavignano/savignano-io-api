@@ -12,13 +12,13 @@ export const add = (req, res) => {
     body: {
       values: { name }
     },
-    hostname,
+    params: { clientName }
   } = req
-  Page.findOne({ 'values.name': name, hostname })
+  Page.findOne({ 'values.name': name, clientName })
   .then(page => {
     if (!page) {
       const newPage = new Page({
-        hostname,
+        clientName,
         slug: slugIt(name),
         values: { name }
       })
@@ -35,9 +35,9 @@ export const add = (req, res) => {
 export const get = async (req, res) => {
   console.log('req ip', req.ip)
   console.log('req headers x-forwarded-for', req.headers['x-forwarded-for'])
-  const { hostname } = req
+  const { clientName } = req.params
   try {
-    const pages = await Page.find({ hostname })
+    const pages = await Page.find({ clientName })
     if (!pages) {
       console.log('no pages here')
       throw 'There were no pages found'
@@ -53,18 +53,17 @@ export const update = async (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
     body: { values },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, hostname })
+    const existingPage = await Page.findOne({ _id, clientName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, hostname })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
     const page = await Page.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: { slug, values }},
       { new: true }
     )
@@ -89,23 +88,22 @@ export const updateWithBackgroundImage = async (req, res) => {
       pageSlug,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, hostname })
+    const existingPage = await Page.findOne({ _id, clientName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, hostname })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
-    const Key = `${hostname}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+    const Key = `${clientName}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
     const data = await uploadFile({ Key }, newBackgroundImage.src, oldBackgroundImageSrc)
     const page = await Page.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: {
         backgroundImage: {
-          src: data.Location,
+          src: Key,
           width: newBackgroundImage.width,
           height: newBackgroundImage.height
         },
@@ -136,20 +134,19 @@ export const updateWithDeleteBackgroundImage = async (req, res) => {
       type,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, hostname })
+    const existingPage = await Page.findOne({ _id, clientName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, hostname })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
     const deleteData = await deleteFile({ Key: oldBackgroundImageSrc })
     console.log(deleteData)
     const page = await Page.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: {
         'backgroundImage.src': null,
         slug,
@@ -173,10 +170,9 @@ export const updateWithDeleteBackgroundImage = async (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Page.findOneAndRemove({ _id, hostname })
+  Page.findOneAndRemove({ _id, clientName })
   .then(page => res.send(page))
   .catch(error => { console.error(error); res.status(400).send({ error })})
 }

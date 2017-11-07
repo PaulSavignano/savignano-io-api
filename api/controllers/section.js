@@ -8,17 +8,17 @@ import { deleteFile, uploadFile } from '../utils/s3'
 export const add = (req, res) => {
   const {
     body: { pageId, pageSlug },
-    hostname
+    params: { clientName }
   } = req
   const newDoc = new Section({
-    hostname,
+    clientName,
     page: ObjectID(pageId),
     pageSlug
   })
   newDoc.save()
   .then(doc => {
     Page.findOneAndUpdate(
-      { _id: doc.page, hostname },
+      { _id: doc.page, clientName },
       { $push: { sections: doc._id }},
       { new: true }
     )
@@ -40,16 +40,15 @@ export const update = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalide id'})
   const {
     body: { values },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   return Section.findOneAndUpdate(
-    { _id, hostname },
+    { _id, clientName },
     { $set: { values }},
     { new: true }
   )
   .then(doc => {
-    Page.findOne({ _id: doc.page, hostname })
+    Page.findOne({ _id: doc.page, clientName })
     .then(page => res.send({ page }))
     .catch(error => { console.error(error); res.status(400).send({ error })})
   })
@@ -66,17 +65,16 @@ export const updateWithBackgroundImage = (req, res) => {
       pageSlug,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  const Key = `${hostname}/page-${pageSlug}/section-${_id}-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${clientName}/page-${pageSlug}/section-${_id}-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     Section.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: {
         backgroundImage: {
-          src: data.Location,
+          src: Key,
           width: newBackgroundImage.width,
           height: newBackgroundImage.height
         },
@@ -85,7 +83,7 @@ export const updateWithBackgroundImage = (req, res) => {
       { new: true }
     )
     .then(doc => {
-      Page.findOne({ _id: doc.page, hostname })
+      Page.findOne({ _id: doc.page, clientName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -104,19 +102,18 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
       type,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     Section.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: { 'backgroundImage.src': null }},
       { new: true }
     )
     .then(doc => {
-      Page.findOne({ _id: doc.page, hostname })
+      Page.findOne({ _id: doc.page, clientName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -129,13 +126,12 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Section.findOneAndRemove({ _id, hostname })
+  Section.findOneAndRemove({ _id, clientName })
   .then(doc => {
     Page.findOneAndUpdate(
-      { _id: doc.page, hostname },
+      { _id: doc.page, clientName },
       { $pull: { sections: doc._id }},
       { new: true }
     )

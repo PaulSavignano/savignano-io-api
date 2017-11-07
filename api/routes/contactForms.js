@@ -9,8 +9,8 @@ import {
 
 const contactForm = express.Router()
 
-contactForm.post('/', authenticate(['admin']), add)
-contactForm.delete('/:_id', authenticate(['admin']), remove)
-contactForm.patch('/:_id/update-values', authenticate(['admin']), update)
+contactForm.post('/:clientName', authenticate(['admin']), add)
+contactForm.delete('/:clientName/:_id', authenticate(['admin']), remove)
+contactForm.patch('/:clientName/:_id/update-values', authenticate(['admin']), update)
 
 export default contactForm

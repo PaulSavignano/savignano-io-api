@@ -11,15 +11,15 @@ export const add = (req, res) => {
       productId,
       productQty
     },
-    hostname
+    params: { clientName }
   } = req
   Product.findOne(
-    { _id: productId, hostname }
+    { _id: productId, clientName }
   )
   .then(product => {
     const { price, name } = product.values
     const cart = new Cart({
-      hostname,
+      clientName,
       items: [{
         productId,
         productQty,
@@ -43,11 +43,10 @@ export const add = (req, res) => {
 export const getId = async (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send()
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   try {
-    const cart = await Cart.findOne({ _id, hostname })
+    const cart = await Cart.findOne({ _id, clientName })
     if (!cart) throw 'No cart found'
     res.send(cart)
   } catch (error) {
@@ -63,10 +62,9 @@ export const update = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
     body: { type, productId, productQty },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Cart.findOne({ _id, hostname })
+  Cart.findOne({ _id, clientName })
     .then(cart => {
       if (!cart) return Promise.reject('cart not found')
       const index = cart.items.map(i => i.productId.toHexString()).indexOf(productId)
@@ -131,7 +129,7 @@ export const update = (req, res) => {
             return cart
         }
       } else {
-        Product.findOne({ _id: productId, hostname })
+        Product.findOne({ _id: productId, clientName })
           .then(pro => {
             cart.total = cart.total + ((pro.values.price * productQty) + (pro.values.price * productQty) * .075)
             cart.subTotal = cart.subTotal + (pro.values.price * productQty)
@@ -158,10 +156,9 @@ export const update = (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(_id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Cart.findOneAndRemove({ _id, hostname })
+  Cart.findOneAndRemove({ _id, clientName })
   .then(cart => res.send(cart))
   .catch(error => { console.error(error); res.status(400).send({ error })})
 }

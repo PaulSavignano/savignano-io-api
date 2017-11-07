@@ -13,11 +13,11 @@ import {
 
 const addresses = express.Router()
 
-addresses.post('/', authenticate([ 'admin', 'owner', 'user' ]), add)
-addresses.post('/admin/:userId', authenticate([ 'owner' ]), adminAdd)
-addresses.patch('/:_id', authenticate([ 'admin', 'owner', 'user' ]), update)
-addresses.patch('/admin/:_id', authenticate([ 'owner' ]), adminUpdate)
-addresses.delete('/:_id', authenticate([ 'admin', 'owner', 'user' ]), remove)
-addresses.delete('/admin/:_id', authenticate([ 'owner' ]), adminRemove)
+addresses.post('/:clientName', authenticate([ 'admin', 'owner', 'user' ]), add)
+addresses.post('/:clientName/admin/:userId', authenticate([ 'owner' ]), adminAdd)
+addresses.patch('/:clientName/:_id', authenticate([ 'admin', 'owner', 'user' ]), update)
+addresses.patch('/:clientName/admin/:_id', authenticate([ 'owner' ]), adminUpdate)
+addresses.delete('/:clientName/:_id', authenticate([ 'admin', 'owner', 'user' ]), remove)
+addresses.delete('/:clientName/admin/:_id', authenticate([ 'owner' ]), adminRemove)
 
 export default addresses

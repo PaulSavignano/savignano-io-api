@@ -9,7 +9,7 @@ import Order from './Order'
 
 const UserSchema = new Schema({
   addresses: [{ type: Schema.ObjectId, ref: 'Address' }],
-  hostname: { type: String, maxlength: 90, required: true },
+  clientName: { type: String, maxlength: 90, required: true },
   password: { type: String, required: true, maxlength: 500, minlength: 6 },
   roles: {
     type: [{ type: String, enum: ['admin', 'master', 'owner', 'user'], maxlength: 25 }],

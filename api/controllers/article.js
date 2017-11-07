@@ -8,15 +8,15 @@ import { deleteFile, uploadFile } from '../utils/s3'
 
 export const add = (req, res) => {
   const {
-    hostname,
     body: {
       pageId,
       pageSlug,
       sectionId
-    }
+    },
+    params: { clientName }
   } = req
   const newDoc = new Article({
-    hostname,
+    clientName,
     page: ObjectID(pageId),
     pageSlug,
     section: ObjectID(sectionId),
@@ -26,12 +26,12 @@ export const add = (req, res) => {
   newDoc.save()
   .then(doc => {
     Section.findOneAndUpdate(
-      { _id: doc.section, hostname },
+      { _id: doc.section, clientName },
       { $push: { items: { kind: 'Article', item: doc._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
+      Page.findOne({ _id: section.page, clientName })
       .then(page => res.send({ editItem: doc, page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -41,25 +41,26 @@ export const add = (req, res) => {
 }
 
 
+
 export const update = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { values },
-    hostname,
-    params: { _id },
+    params: { _id, clientName },
   } = req
   Article.findOneAndUpdate(
-    { _id, hostname },
+    { _id, clientName },
     { $set: { values }},
     { new: true }
   )
   .then(doc => {
-    Page.findOne({ _id: doc.page, hostname })
+    Page.findOne({ _id: doc.page, clientName })
     .then(page => res.send({ page }))
     .catch(error => { console.error(error); res.status(400).send({ error: error })})
   })
   .catch(error => { console.error(error); res.status(400).send({ error: error })})
 }
+
 
 
 export const updateWithImage = (req, res) => {
@@ -71,17 +72,16 @@ export const updateWithImage = (req, res) => {
       oldImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  const Key = `${hostname}/page-${pageSlug}/article-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${clientName}/page-${pageSlug}/article-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key }, newImage.src, oldImageSrc)
   .then(data => {
     Article.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: {
         image: {
-          src: data.Location,
+          src: Key,
           width: newImage.width,
           height: newImage.height
         },
@@ -90,7 +90,7 @@ export const updateWithImage = (req, res) => {
       { new: true }
     )
     .then(doc => {
-      Page.findOne({ _id: doc.page, hostname })
+      Page.findOne({ _id: doc.page, clientName })
       .then(page => res.send({ page }))
     })
     .catch(error => { console.error(error); res.status(400).send({ error })})
@@ -107,19 +107,18 @@ export const updateWithDeleteImage = (req, res) => {
       type,
       values
     },
-    hostname,
-    params: { _id },
+    params: { _id, clientName },
   } = req
   return deleteFile({ Key: oldImageSrc })
   .then(data => {
     console.log(data)
     Article.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: { 'image.src': null }},
       { new: true }
     )
     .then(doc => {
-      Page.findOne({ _id: doc.page, hostname })
+      Page.findOne({ _id: doc.page, clientName })
       .then(page => res.send({ page }))
     })
     .catch(error => { console.error(error); res.status(400).send({ error })})
@@ -132,18 +131,17 @@ export const updateWithDeleteImage = (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Article.findOneAndRemove({ _id, hostname })
+  Article.findOneAndRemove({ _id, clientName })
   .then(doc => {
     Section.findOneAndUpdate(
-      { _id: doc.section, hostname },
+      { _id: doc.section, clientName },
       { $pull: { items: { kind: 'Article', item: doc._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
+      Page.findOne({ _id: section.page, clientName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })

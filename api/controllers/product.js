@@ -9,10 +9,10 @@ import { deleteFile, uploadFile } from '../utils/s3'
 export const add = (req, res) => {
   const {
     body: { pageId, pageSlug, sectionId },
-    hostname
+    params: { clientName }
   } = req
   const newDoc = new Product({
-    hostname,
+    clientName,
     page: ObjectID(pageId),
     pageSlug,
     section: ObjectID(sectionId),
@@ -21,13 +21,13 @@ export const add = (req, res) => {
   newDoc.save()
   .then(product => {
     Section.findOneAndUpdate(
-      { _id: product.section, hostname },
+      { _id: product.section, clientName },
       { $push: { items: { kind: 'Product', item: product._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
-      .then(page => res.send({ editItem: product, page }))
+      Page.findOne({ _id: section.page, clientName })
+      .then(page => res.send({ editItem: product, page, product }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
     .catch(error => { console.error(error); res.status(400).send({ error })})
@@ -36,9 +36,9 @@ export const add = (req, res) => {
 }
 
 export const get = async (req, res) => {
-  const { hostname } = req
+  const { clientName } = req.params
   try {
-    const products = await Product.find({ hostname })
+    const products = await Product.find({ clientName })
     if (!products) throw 'No products found'
     res.send(products)
   } catch (error) {
@@ -53,16 +53,15 @@ export const update = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { values },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   Product.findOneAndUpdate(
-    { _id, hostname },
+    { _id, clientName },
     { $set: { values }},
     { new: true }
   )
   .then(product => {
-    Page.findOne({ _id: product.page, hostname })
+    Page.findOne({ _id: product.page, clientName })
     .then(page => res.send({ page, product }))
     .catch(error => { console.error(error); res.status(400).send({ error })})
   })
@@ -82,17 +81,16 @@ export const updateWithImage = (req, res) => {
       oldImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  const Key = `${hostname}/page-${pageSlug}/product-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${clientName}/page-${pageSlug}/product-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key }, newImage.src, oldImageSrc)
   .then(data => {
     Product.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: {
         image: {
-          src: data.Location,
+          src: Key,
           width: newImage.width,
           height: newImage.height
         },
@@ -101,7 +99,7 @@ export const updateWithImage = (req, res) => {
       { new: true }
     )
     .then(product => {
-      Page.findOne({ _id: product.page, hostname })
+      Page.findOne({ _id: product.page, clientName })
       .then(page => res.send({ page, product }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -116,19 +114,18 @@ export const updateWithDeleteImage = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { oldImageSrc, type, values },
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
   return deleteFile({ Key: oldImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     Product.findOneAndUpdate(
-      { _id, hostname },
+      { _id, clientName },
       { $set: { 'image.src': null }},
       { new: true }
     )
     .then(product => {
-      Page.findOne({ _id: product.page, hostname })
+      Page.findOne({ _id: product.page, clientName })
       .then(page => res.send({ page, product }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -142,18 +139,17 @@ export const updateWithDeleteImage = (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, clientName }
   } = req
-  Product.findOneAndRemove({ _id, hostname })
+  Product.findOneAndRemove({ _id, clientName })
   .then(product => {
     Section.findOneAndUpdate(
-      { _id: product.section, hostname },
+      { _id: product.section, clientName },
       { $pull: { items: { kind: 'Product', item: product._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
+      Page.findOne({ _id: section.page, clientName })
       .then(page => res.send({ page, product }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
