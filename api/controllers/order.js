@@ -73,23 +73,28 @@ export const add = (req, res, next) => {
   }
 }
 
-const createCharge = async ({
-  address,
-  cart,
-  stripeToken,
-  res,
-  req,
-  user
-}) => {
-  const { _id, values: { firstName, lastName, email }} = user
-  const { clientName } = req.params
+const createCharge = async (props) => {
   try {
-    const { stripeSkLive, stripeSkText} = await ApiConfig.findOne({ clientName })
-    if (!stripeSkLive || !stripeSkText) throw 'Unable to create charge, no stripe api keys found'
+    const {
+      address,
+      cart,
+      req: { params: { clientName }},
+      res,
+      stripeToken,
+      user
+    } = props
+    const {
+      _id,
+      values: { firstName, lastName, email }
+    } = user
+    const apiConfig = await ApiConfig.findOne({ clientName })
+    const { values: { stripeSkLive, stripeSkTest }} = apiConfig
+    if (!stripeSkLive && !stripeSkTest) throw 'Unable to create charge, no stripe api keys found'
+    const stripe = require("stripe")(stripeSkLive || stripeSkTest)
     const charge = await stripe.charges.create({
       amount: Math.round(cart.total),
       currency: "usd",
-      source: stripeSklive || stripeSkText,
+      source: stripeToken,
       description: `${clientName} Order`
     })
     if (!charge) throw 'Unable to create charge,'
@@ -105,7 +110,7 @@ const createCharge = async ({
       user: _id,
     }).save()
     res.send({ order, user })
-    const { email, firstName, lastName, cart, address } = order
+
     const { name, phone, street, city, state, zip } = address
 
     const htmlOrder = `
