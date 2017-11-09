@@ -154,7 +154,7 @@ export const update = (req, res) => {
 
 
 export const remove = (req, res) => {
-  if (!ObjectID.isValid(_id)) return res.status(404).send({ error: 'Invalid id'})
+  if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
     params: { _id, clientName }
   } = req

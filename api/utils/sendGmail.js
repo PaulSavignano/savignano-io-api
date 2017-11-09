@@ -15,15 +15,18 @@ const sendGmail = async ({
   try {
     const apiConfig = await ApiConfig.findOne({ clientName })
     if (!apiConfig) throw 'Email not sent, no apiConfig was found'
+    console.log('apiConfig', apiConfig)
     const {
-      values: {
-        gmailUser,
-        oauthAccessToken,
-        oauthClientId,
-        oauthClientSecret,
-        oauthRefreshToken
-      }
-    } = apiConfig
+      gmailUser,
+      oauthAccessToken,
+      oauthClientId,
+      oauthClientSecret,
+      oauthRefreshToken
+    } = apiConfig.values
+    console.log('oauthAccessToken', oauthAccessToken)
+    console.log('oauthClientId', oauthClientId)
+    console.log('oauthClientSecret', oauthClientSecret)
+    console.log('oauthRefreshToken', oauthRefreshToken)
     const brand = await Brand.findOne({ clientName })
     if (!brand) throw 'Email not sent, no brand was found'
     const {
@@ -138,6 +141,7 @@ const sendGmail = async ({
     }
     const userMailInfo = await transporter.sendMail(userMail)
     if (!userMailInfo) throw 'User email did not send'
+    console.log('userMailInfo: ', userMailInfo)
     return userMailInfo
   } catch (error) {
     return Promise.reject(error)

@@ -47,13 +47,11 @@ brands.patch('/:clientName/:_id/business/update-values', authenticate(['admin'])
 brands.patch('/:clientName/:_id/business/update-with-image', authenticate(['admin']), updateBusinessWithImage)
 brands.patch('/:clientName/:_id/business/update-with-delete-image', authenticate(['admin']), updateBusinessWithDeleteImage)
 
-
 brands.patch('/:clientName/:_id/body/update-values', authenticate(['admin']), updateBodyValues)
 brands.patch('/:clientName/:_id/body/update-with-background-image', authenticate(['admin']), updateBodyWithBackgroundImage)
 brands.patch('/:clientName/:_id/body/update-with-delete-background-image', authenticate(['admin']), updateBodyWithDeleteBackgroundImage)
 
-
-brands.patch('/:clientName/:_id/cardstyle', authenticate(['admin']), updateCardStyle)
+brands.patch('/:clientName/:_id/cardstyle/update-values', authenticate(['admin']), updateCardStyle)
 
 brands.patch('/:clientName/:_id/footer/update-with-image-and-background-image', authenticate(['admin']), updateFooterWithImageAndBackgroundImage)
 brands.patch('/:clientName/:_id/footer/update-with-image-and-delete-background-image', authenticate(['admin']), updateFooterWithImageAndDeleteBackgroundImage)

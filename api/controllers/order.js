@@ -73,20 +73,19 @@ export const add = (req, res, next) => {
   }
 }
 
-const createCharge = async (props) => {
+const createCharge = async ({
+  address,
+  cart,
+  req: { params: { clientName }},
+  res,
+  stripeToken,
+  user
+}) => {
+  const {
+    _id,
+    values: { firstName, lastName, email }
+  } = user
   try {
-    const {
-      address,
-      cart,
-      req: { params: { clientName }},
-      res,
-      stripeToken,
-      user
-    } = props
-    const {
-      _id,
-      values: { firstName, lastName, email }
-    } = user
     const apiConfig = await ApiConfig.findOne({ clientName })
     const { values: { stripeSkLive, stripeSkTest }} = apiConfig
     if (!stripeSkLive && !stripeSkTest) throw 'Unable to create charge, no stripe api keys found'
@@ -109,7 +108,6 @@ const createCharge = async (props) => {
       total: cart.total,
       user: _id,
     }).save()
-    res.send({ order, user })
 
     const { name, phone, street, city, state, zip } = address
 
@@ -132,7 +130,7 @@ const createCharge = async (props) => {
       <div>${street}</div>
       <div>${city}, ${state} ${zip}</div>
     `
-    sendGmail({
+    const mailData = await sendGmail({
       clientName,
       to: email,
       toSubject: 'Thank you for your order!',
@@ -148,6 +146,9 @@ const createCharge = async (props) => {
         <p>Once shipped, you can mark the item as shipped in at <a href="${clientName}/admin/orders">${clientName}/admin/orders</a> to send confirmation to ${firstName}.</p>
       `
     })
+    console.log(mailData)
+
+    res.send({ order, user })
   } catch (error) {
     console.error(error)
     res.status(400).send({ error })
