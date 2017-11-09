@@ -129,7 +129,7 @@ export const signin = async (req, res) => {
   const response = await createUserResponse(user, clientName)
   res.set('x-access-token', newAccessToken);
   res.set('x-refresh-token', newRefreshToken);
-  console.log('res headrers', res.headers)
+  console.log('res headers', res)
   res.send(response)
 }
 
