@@ -124,10 +124,12 @@ export const signin = async (req, res) => {
     return res.status(400).send({ error: { password: 'password does not match' }})
   }
   const { newAccessToken, newRefreshToken } = await createTokens(user, clientName)
-  console.log('newAccessToken', newAccessToken)
+  console.log('newAccessToken: ', newAccessToken)
+  console.log('newRefreshToken: ', newRefreshToken)
   const response = await createUserResponse(user, clientName)
   res.set('x-access-token', newAccessToken);
   res.set('x-refresh-token', newRefreshToken);
+  console.log('res headrers', res.headers)
   res.send(response)
 }
 
