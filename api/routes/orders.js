@@ -11,9 +11,9 @@ import {
 
 const orders = express.Router()
 
-orders.post('/', authenticate(['user']), add)
-orders.get('/', authenticate(['user']), get)
-orders.get('/admin', authenticate(['admin', 'owner']), getAdmin)
-orders.patch('/:_id', authenticate(['admin']), update)
+orders.post('/:brandName', authenticate(['user']), add)
+orders.get('/:brandName', authenticate(['user']), get)
+orders.get('/:brandName/admin', authenticate(['admin', 'owner']), getAdmin)
+orders.patch('/:brandName/:_id', authenticate(['admin']), update)
 
 export default orders

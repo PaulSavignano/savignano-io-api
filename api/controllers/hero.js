@@ -10,10 +10,10 @@ import { deleteFile, uploadFile } from '../utils/s3'
 export const add = (req, res) => {
   const {
     body: { pageId, pageSlug, sectionId },
-    hostname
+    params: { brandName }
   } = req
   const newDoc = new Hero({
-    hostname,
+    brandName,
     page: ObjectID(pageId),
     pageSlug,
     section: ObjectID(sectionId),
@@ -22,12 +22,12 @@ export const add = (req, res) => {
   newDoc.save()
   .then(doc => {
     Section.findOneAndUpdate(
-      { _id: doc.section, hostname },
+      { _id: doc.section, brandName },
       { $push: { items: { kind: 'Hero', item: doc._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
+      Page.findOne({ _id: section.page, brandName })
       .then(page => res.send({ editItem: doc, page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -49,18 +49,17 @@ export const updateWithImageAndBackgroundImage = (req, res) => {
       oldBackgroundImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  const imageKey = `${hostname}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
-  const backgroundImageKey = `${hostname}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(imageData => {
     return Hero.findOneAndUpdate(
-      { _id, hostname },
+      { _id, brandName },
       { $set: {
         image: {
-          src: imageData.Location,
+          src: imageKey,
           width: newImage.width,
           height: newImage.height
         },
@@ -71,10 +70,10 @@ export const updateWithImageAndBackgroundImage = (req, res) => {
       return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
       .then(backgroundImageData => {
         return Hero.findOneAndUpdate(
-          { _id, hostname },
+          { _id, brandName },
           { $set: {
             backgroundImage: {
-              src: backgroundImageData.Location,
+              src: backgroundImageKey,
               width: newBackgroundImage.width,
               height: newBackgroundImage.height
             },
@@ -83,7 +82,7 @@ export const updateWithImageAndBackgroundImage = (req, res) => {
           { new: true }
         )
         .then(hero => {
-          return Page.findOne({ _id: hero.page, hostname })
+          return Page.findOne({ _id: hero.page, brandName })
           .then(page => res.send({ page }))
           .catch(error => { console.error(error); res.status(400).send({ error })})
         })
@@ -106,20 +105,19 @@ export const updateWithImageAndDeleteBackgroundImage = (req, res) => {
       oldBackgroundImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  const imageKey = `${hostname}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldBackgroundImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
     .then(data => {
       return Hero.findOneAndUpdate(
-        { _id, hostname },
+        { _id, brandName },
         { $set: {
           backgroundImage: {
-            src: data.Location,
+            src: Key,
             width: newBackgroundImage.width,
             height: newBackgroundImage.height
           },
@@ -129,7 +127,7 @@ export const updateWithImageAndDeleteBackgroundImage = (req, res) => {
         { new: true }
       )
       .then(hero => {
-        return Page.findOne({ _id: hero.page, hostname })
+        return Page.findOne({ _id: hero.page, brandName })
         .then(page => res.send({ page }))
         .catch(error => { console.error(error); res.status(400).send({ error })})
       })
@@ -151,20 +149,19 @@ export const updateWithBackgroundImageAndDeleteImage = (req, res) => {
       type,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${hostname}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
     .then(data => {
       return Hero.findOneAndUpdate(
-        { _id, hostname },
+        { _id, brandName },
         { $set: {
           backgroundImage: {
-            src: data.Location,
+            src: Key,
             width: newBackgroundImage.width,
             height: newBackgroundImage.height
           },
@@ -174,7 +171,7 @@ export const updateWithBackgroundImageAndDeleteImage = (req, res) => {
         { new: true }
       )
       .then(hero => {
-        return Page.findOne({ _id: hero.page, hostname })
+        return Page.findOne({ _id: hero.page, brandName })
         .then(page => res.send({ page }))
         .catch(error => { console.error(error); res.status(400).send({ error })})
       })
@@ -189,8 +186,7 @@ export const updateWithDeleteImageAndDeleteBackgroundImage = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { oldImageSrc, oldBackgroundImageSrc, values },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
   .then(deleteData1 => {
@@ -199,7 +195,7 @@ export const updateWithDeleteImageAndDeleteBackgroundImage = (req, res) => {
     .then(deleteData2 => {
       console.log(deleteData2)
       return Hero.findOneAndUpdate(
-        { _id, hostname },
+        { _id, brandName },
         { $set: {
           'backgroundImage.src': null,
           'image.src': null,
@@ -208,7 +204,7 @@ export const updateWithDeleteImageAndDeleteBackgroundImage = (req, res) => {
         { new: true }
       )
       .then(hero => {
-        return Page.findOne({ _id: hero.page, hostname })
+        return Page.findOne({ _id: hero.page, brandName })
         .then(page => res.send({ page }))
         .catch(error => { console.error(error); res.status(400).send({ error })})
       })
@@ -228,17 +224,16 @@ export const updateWithImage = (req, res) => {
       oldImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  const imageKey = `${hostname}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(data => {
     return Hero.findOneAndUpdate(
-      { _id, hostname },
+      { _id, brandName },
       { $set: {
         image: {
-          src: data.Location,
+          src: Key,
           width: newImage.width,
           height: newImage.height
         },
@@ -247,7 +242,7 @@ export const updateWithImage = (req, res) => {
       { new: true }
     )
     .then(hero => {
-      return Page.findOne({ _id: hero.page, hostname })
+      return Page.findOne({ _id: hero.page, brandName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -265,17 +260,16 @@ export const updateWithBackgroundImage = (req, res) => {
       oldBackgroundImageSrc,
       values
     },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${hostname}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     return Hero.findOneAndUpdate(
-      { _id, hostname },
+      { _id, brandName },
       { $set: {
         backgroundImage: {
-          src: data.Location,
+          src: Key,
           width: newBackgroundImage.width,
           height: newBackgroundImage.height
         },
@@ -284,7 +278,7 @@ export const updateWithBackgroundImage = (req, res) => {
       { new: true }
     )
     .then(hero => {
-      return Page.findOne({ _id: hero.page, hostname })
+      return Page.findOne({ _id: hero.page, brandName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -297,14 +291,13 @@ export const updateWithDeleteImage = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { oldImageSrc, values },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     return Hero.findOneAndUpdate(
-      { _id, hostname },
+      { _id, brandName },
       { $set: {
         'image.src': null,
         values
@@ -312,7 +305,7 @@ export const updateWithDeleteImage = (req, res) => {
       { new: true }
     )
     .then(hero => {
-      return Page.findOne({ _id: hero.page, hostname })
+      return Page.findOne({ _id: hero.page, brandName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -325,14 +318,13 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { oldBackgroundImageSrc, values },
-    hostname,
-    params: { _id },
+    params: { _id, brandName },
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
   .then(deleteData => {
     console.log(deleteData)
     return Hero.findOneAndUpdate(
-      { _id, hostname },
+      { _id, brandName },
       { $set: {
         'backgroundImage.src': null,
         values
@@ -340,7 +332,7 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
       { new: true }
     )
     .then(hero => {
-      return Page.findOne({ _id: hero.page, hostname })
+      return Page.findOne({ _id: hero.page, brandName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })
@@ -353,18 +345,17 @@ export const updateValues = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { values },
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
   return Hero.findOneAndUpdate(
-    { _id, hostname },
+    { _id, brandName },
     { $set: {
       values
     }},
     { new: true }
   )
   .then(hero => {
-    return Page.findOne({ _id: hero.page, hostname })
+    return Page.findOne({ _id: hero.page, brandName })
     .then(page => res.send({ page }))
     .catch(error => { console.error(error); res.status(400).send({ error })})
   })
@@ -376,18 +367,17 @@ export const updateValues = (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    hostname,
-    params: { _id }
+    params: { _id, brandName }
   } = req
-  Hero.findOneAndRemove({ _id, hostname })
+  Hero.findOneAndRemove({ _id, brandName })
   .then(doc => {
     Section.findOneAndUpdate(
-      { _id: doc.section, hostname },
+      { _id: doc.section, brandName },
       { $pull: { items: { kind: 'Hero', item: doc._id }}},
       { new: true }
     )
     .then(section => {
-      Page.findOne({ _id: section.page, hostname })
+      Page.findOne({ _id: section.page, brandName })
       .then(page => res.send({ page }))
       .catch(error => { console.error(error); res.status(400).send({ error })})
     })

@@ -8,7 +8,7 @@ const HeroSchema = new Schema({
     width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
     height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
   },
-  hostname: { type: String, maxlength: 90, required: true },
+  brandName: { type: String, maxlength: 90, required: true },
   image: {
     src: { type: String, trim: true, maxlength: 150 },
     width: { type: Number, trim: true, default: 333, max: 10000, min: 0 },

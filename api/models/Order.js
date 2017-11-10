@@ -9,7 +9,7 @@ const OrderSchema = new Schema({
     state: { type: String, required: true, maxlength: 50 },
     zip: { type: String, required: true, maxlength: 50 },
   },
-  hostname: { type: String, maxlength: 90, required: true },
+  brandName: { type: String, maxlength: 90, required: true },
   cart: { type: Object, required: true },
   email: { type: String, required: true, maxlength: 100 },
   firstName: { type: String, required: true, maxlength: 100 },

@@ -9,11 +9,11 @@ const PageSchema = new Schema({
     width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
     height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
   },
-  hostname: { type: String, maxlength: 90, required: true, },
+  brandName: { type: String, maxlength: 90, required: true, },
   sections: [{ type: Schema.Types.ObjectId, ref: 'Section' }],
   slug: { type: String },
   values: {
-    name: { type: String, trim: true, minlength: 1, maxlength: 1000 },
+    name: { type: String, trim: true, minlength: 1, maxlength: 1000, unique: true },
     backgroundColor: { type: String, trim: true, minlength: 1, default: 'rgb(255,255,255)', maxlength: 50 },
     backgroundPosition: { type: String, trim: true, maxlength: 50 }
   },

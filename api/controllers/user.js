@@ -21,36 +21,38 @@ export const add = async (req, res) => {
       lastName,
       password
     },
-    hostname,
+    params: { brandName }
   } = req
+  console.log('req.params', req.params)
+  console.log('brandName', brandName)
   if ( !email || !firstName || !firstName || !password) {
     return res.status(422).send({ error: 'You must provide all fields' });
   }
   try {
-    const existingUser = await User.findOne({ 'values.email': email, hostname })
+    const existingUser = await User.findOne({ 'values.email': email, brandName })
     if (existingUser) {
       throw 'That user already exists'
     }
     const user = await new User({
-      hostname,
+      brandName,
       password,
       values: { email, firstName, lastName }
     }).save()
-    const { newAccessToken, newRefreshToken } = await createTokens(user, hostname)
+    const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
     const { values } = user
     sendGmail({
-      hostname,
+      brandName,
       to: values.email,
-      toSubject: `Welcome to ${hostname}!`,
+      toSubject: `Welcome to ${brandName}!`,
       toBody: `
         <p>Hi ${values.firstName},</p>
-        <p>Thank you for joining ${hostname}!</p>
-        <p>I hope you enjoy our offerings.  You may modify your profile settings at <a href="${hostname}/user/profile">${hostname}/user/profile</a>.</p>
+        <p>Thank you for joining ${brandName}!</p>
+        <p>I hope you enjoy our offerings.  You may modify your profile settings at <a href="${brandName}/user/profile">${brandName}/user/profile</a>.</p>
         <p>Please let us know if there is anything we can do to better help you.</p>
       `,
-      fromSubject: `New ${hostname} user!`,
+      fromSubject: `New ${brandName} user!`,
       fromBody: `
-        <p>New user ${values.firstName} ${values.lastName} just signed up at ${hostname}.</p>
+        <p>New user ${values.firstName} ${values.lastName} just signed up at ${brandName}.</p>
         `
     })
     res.set('x-access-token', newAccessToken)
@@ -66,10 +68,10 @@ export const add = async (req, res) => {
 
 export const get = (req, res) => {
   const {
-    hostname,
+    params: { brandName },
     user
   } = req
-  return createUserResponse(user, hostname)
+  return createUserResponse(user, brandName)
   .then(({ user, users, orders }) => {
     res.send({ user, users, orders })
   })
@@ -94,9 +96,9 @@ export const update = (req, res) => {
 
 
 export const remove = (req, res) => {
-  const { hostname, user } = req
+  const { params: { brandName }, user } = req
   User.findOneAndRemove(
-    { _id: user._id, hostname }
+    { _id: user._id, brandName }
   )
   .then(user => res.status(200).send(user))
   .catch(error => {
@@ -110,10 +112,10 @@ export const remove = (req, res) => {
 export const signin = async (req, res) => {
   const {
     body: { email, password },
-    hostname
+    params: { brandName }
   } = req
-  console.log(hostname)
-  const user = await User.findOne({ 'values.email': email, hostname })
+  console.log(brandName)
+  const user = await User.findOne({ 'values.email': email, brandName })
   if (!user) {
     return res.status(400).send({ error: { email: 'email not found' }})
   }
@@ -121,11 +123,13 @@ export const signin = async (req, res) => {
   if (!valid) {
     return res.status(400).send({ error: { password: 'password does not match' }})
   }
-  const { newAccessToken, newRefreshToken } = await createTokens(user, hostname)
-  console.log('newAccessToken', newAccessToken)
-  const response = await createUserResponse(user, hostname)
+  const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
+  console.log('newAccessToken: ', newAccessToken)
+  console.log('newRefreshToken: ', newRefreshToken)
+  const response = await createUserResponse(user, brandName)
   res.set('x-access-token', newAccessToken);
   res.set('x-refresh-token', newRefreshToken);
+  console.log('res headers', res)
   res.send(response)
 }
 
@@ -135,7 +139,7 @@ export const signin = async (req, res) => {
 export const recovery = (req, res, next) => {
   const {
     body: { email },
-    hostname
+    params: { brandName }
   } = req
   return new Promise((resolve, reject) => {
     crypto.randomBytes(20, (error, buf) => {
@@ -144,12 +148,12 @@ export const recovery = (req, res, next) => {
     })
   })
   .then(resetToken => {
-    User.findOne({ 'values.email': email.toLowerCase(), hostname })
+    User.findOne({ 'values.email': email.toLowerCase(), brandName })
     .then(user => {
       if (!user) return Promise.reject({ email: 'User not found.' })
-      const path = `${hostname}user/reset/${resetToken}`
+      const path = `${brandName}user/reset/${resetToken}`
       const newResetToken = new ResetToken({
-        hostname,
+        brandName,
         resetToken,
         user: user._id
       })
@@ -157,7 +161,7 @@ export const recovery = (req, res, next) => {
       .then(() => {
         const { firstName, email } = user.values
         sendGmail({
-          hostname,
+          brandName,
           to: email,
           toSubject: 'Reset Password',
           toBody: `
@@ -180,16 +184,15 @@ export const recovery = (req, res, next) => {
 export const reset = async (req, res) => {
   const {
     body: { password },
-    hostname,
-    params: { resetToken }
+    params: { brandName, resetToken }
   } = req
   try {
-    const { user } = await ResetToken.findOne({ resetToken, hostname }).populate('user')
+    const { user } = await ResetToken.findOne({ resetToken, brandName }).populate('user')
     if (!user) return Promise.reject('your reset token has expired')
     user.password = password
     await user.save()
-    const { newAccessToken, newRefreshToken } = await createTokens(user, hostname)
-    const response = await createUserResponse(user, hostname)
+    const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
+    const response = await createUserResponse(user, brandName)
     res.set('x-access-token', newAccessToken);
     res.set('x-refresh-token', newRefreshToken);
     res.send(response)
@@ -210,24 +213,24 @@ export const contact = (req, res) => {
       message,
       phone
     },
-    hostname
+    params: { brandName }
   } = req
   if (!firstName || !email || !message) {
     return res.status(422).send({ error: 'You must provide all fields' });
   }
-  Brand.findOne({ hostname })
+  Brand.findOne({ brandName })
   .then(brand => {
     if (!brand) return Promise.reject('brand not found')
     const { name } = brand.business.values
     sendGmail({
-      hostname,
+      brandName,
       to: email,
       toSubject: `Thank you for contacting ${name}!`,
       name: firstName,
       toBody: `<p>Thank you for contacting ${name}.  We will respond to your request shortly!</p>`,
       fromSubject: `New Contact Request`,
       fromBody: `
-        <p>${firstName} just contacted you through ${hostname}.</p>
+        <p>${firstName} just contacted you through ${brandName}.</p>
         <div>Phone: ${phone ? phone : 'not provided'}</div>
         <div>Email: ${email}</div>
         <div>Message: ${message}</div>
@@ -255,7 +258,7 @@ export const requestEstimate = (req, res) => {
       size,
       note
     },
-    hostname,
+    params: { brandName }
   } = req
   var auth = 'Basic ' + new Buffer(process.env.MOVERBASE_KEY + ':').toString('base64')
   return fetch(`https://api.moverbase.com/v1/leads/`, {
@@ -279,14 +282,14 @@ export const requestEstimate = (req, res) => {
   .then(res => res.json())
   .then(json => {
     sendGmail({
-      hostname,
+      brandName,
       to: email,
       toSubject: 'Thank you for contacting us for a free estimate',
       name: firstName,
       toBody: `<p>Thank you for requesting a free estimate.  We will contact you shortly!</p>`,
       fromSubject: `New Estimate Request`,
       fromBody: `
-        <p>${firstName} just contacted you through ${hostname}.</p>
+        <p>${firstName} just contacted you through ${brandName}.</p>
         ${phone && `<div>Phone: ${phone}</div>`}
         <div>Email: ${email}</div>
         <div>Note: ${note}</div>

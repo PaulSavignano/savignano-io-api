@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 const AddressSchema = new Schema({
-  hostname: { type: String, maxlength: 90, required: true },
+  brandName: { type: String, maxlength: 90, required: true },
   values: {
     name: { type: String, trim: true, minlength: 1, maxlength: 50 },
     phone: { type: String, trim: true, minlength: 1, maxlength: 20 },

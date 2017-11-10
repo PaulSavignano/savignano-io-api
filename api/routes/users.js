@@ -21,19 +21,19 @@ import {
 
 const users = express.Router()
 
-users.post('/', add)
-users.get('/', authenticate([ 'user', 'admin', 'owner' ]), get)
-users.patch('/', authenticate([ 'user', 'admin', 'owner' ]), update)
-users.delete('/', authenticate([ 'user', 'admin', 'owner' ]), remove)
-users.post('/signin', signin)
-users.post('/recovery', recovery)
-users.post('/reset/:resetToken', reset)
+users.post('/:brandName', add)
+users.get('/:brandName', authenticate([ 'user', 'admin', 'owner' ]), get)
+users.patch('/:brandName', authenticate([ 'user', 'admin', 'owner' ]), update)
+users.delete('/:brandName', authenticate([ 'user', 'admin', 'owner' ]), remove)
+users.post('/:brandName/signin', signin)
+users.post('/:brandName/recovery', recovery)
+users.post('/:brandName/reset/:resetToken', reset)
 
-users.post('/contact', contact)
-users.post('/request-estimate', requestEstimate)
+users.post('/:brandName/contact', contact)
+users.post('/:brandName/request-estimate', requestEstimate)
 
-users.post('/admin', authenticate([ 'owner' ]), adminAdd)
-users.patch('/admin/:_id', authenticate([ 'owner']), adminUpdate)
-users.delete('/admin/:_id', authenticate([ 'owner' ]), adminRemove)
+users.post('/:brandName/admin', authenticate([ 'owner' ]), adminAdd)
+users.patch('/:brandName/admin/:_id', authenticate([ 'owner']), adminUpdate)
+users.delete('/:brandName/admin/:_id', authenticate([ 'owner' ]), adminRemove)
 
 export default users
