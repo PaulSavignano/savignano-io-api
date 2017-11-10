@@ -105,8 +105,7 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
+  .then(() => {
     Section.findOneAndUpdate(
       { _id, brandName },
       { $set: { 'backgroundImage.src': null }},

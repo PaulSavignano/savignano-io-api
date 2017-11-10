@@ -146,8 +146,6 @@ const createCharge = async ({
         <p>Once shipped, you can mark the item as shipped in at <a href="${brandName}/admin/orders">${brandName}/admin/orders</a> to send confirmation to ${firstName}.</p>
       `
     })
-    console.log(mailData)
-
     res.send({ order, user })
   } catch (error) {
     console.error(error)

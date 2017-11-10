@@ -49,8 +49,7 @@ export const updateAppBarWithImage = (req, res) => {
   } = req
   const imageKey = `${brandName}/brand-${_id}-appbar-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
-  .then(data => {
-    console.log(data)
+  .then(() => {
     return Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
@@ -80,8 +79,7 @@ export const updateAppBarWithDeleteImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(data => {
-    console.log(data)
+  .then(() => {
     return Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
@@ -176,9 +174,8 @@ export const updateBodyWithDeleteBackgroundImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(data => {
-    console.log(data)
-    return Brand.findOneAndUpdate(
+  .then(() => {
+    Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
         'body.backgroundImage.src': null,
@@ -253,9 +250,8 @@ export const updateBusinessWithDeleteImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(data => {
-    console.log(data)
-    return Brand.findOneAndUpdate(
+  .then(() => {
+    Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
         'business.image.src': null,
@@ -375,8 +371,7 @@ export const updateFooterWithImageAndDeleteBackgroundImage = (req, res) => {
   } = req
   const imageKey = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(data => {
-    console.log(data)
+  .then(() => {
     return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
     .then(data => {
       return Brand.findOneAndUpdate(
@@ -415,8 +410,7 @@ export const updateFooterWithBackgroundImageAndDeleteImage = (req, res) => {
   } = req
   const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldImageSrc })
-  .then(data => {
-    console.log(data)
+  .then(() => {
     return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
     .then(data => {
       return Brand.findOneAndUpdate(
@@ -451,11 +445,9 @@ export const updateFooterWithDeleteImageAndDeleteBackgroundImage = (req, res) =>
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(dataOne => {
-    console.log(dataOne)
+  .then(() => {
     return deleteFile({ Key: oldBackgroundImageSrc })
-    .then(dataTwo => {
-      console.log(dataTwo)
+    .then(() => {
       return Brand.findOneAndUpdate(
         { _id, brandName },
         { $set: {
@@ -547,9 +539,8 @@ export const updateFooterWithDeleteImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
-    return Brand.findOneAndUpdate(
+  .then(() => {
+    Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
         'footer.image.src': null,
@@ -573,9 +564,8 @@ export const updateFooterWithDeleteBackgroundImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
-    return Brand.findOneAndUpdate(
+  .then(() => {
+    Brand.findOneAndUpdate(
       { _id, brandName },
       { $set: {
         'footer.backgroundImage.src': null,

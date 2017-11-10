@@ -1,8 +1,8 @@
 import { ObjectID } from 'mongodb'
-import crypto from 'crypto'
-import fetch from 'node-fetch'
 import bcrypt from 'bcryptjs'
+import fetch from 'node-fetch'
 
+import createToken from '../utils/createToken'
 import Address from '../models/Address'
 import Brand from '../models/Brand'
 import Order from '../models/Order'
@@ -23,8 +23,6 @@ export const add = async (req, res) => {
     },
     params: { brandName }
   } = req
-  console.log('req.params', req.params)
-  console.log('brandName', brandName)
   if ( !email || !firstName || !firstName || !password) {
     return res.status(422).send({ error: 'You must provide all fields' });
   }
@@ -66,7 +64,7 @@ export const add = async (req, res) => {
 
 
 
-export const get = (req, res) => {
+export const get = async (req, res) => {
   const {
     params: { brandName },
     user
@@ -114,23 +112,20 @@ export const signin = async (req, res) => {
     body: { email, password },
     params: { brandName }
   } = req
-  console.log(brandName)
-  const user = await User.findOne({ 'values.email': email, brandName })
-  if (!user) {
-    return res.status(400).send({ error: { email: 'email not found' }})
+  try {
+    const user = await User.findOne({ 'values.email': email, brandName })
+    if (!user) throw { email: 'email not found' }
+    const valid = await bcrypt.compare(password, user.password)
+    if (!valid) throw { password: 'password does not match' }
+    const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
+    const response = await createUserResponse(user, brandName)
+    res.set('x-access-token', newAccessToken);
+    res.set('x-refresh-token', newRefreshToken);
+    res.send(response)
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({ error })
   }
-  const valid = await bcrypt.compare(password, user.password)
-  if (!valid) {
-    return res.status(400).send({ error: { password: 'password does not match' }})
-  }
-  const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
-  console.log('newAccessToken: ', newAccessToken)
-  console.log('newRefreshToken: ', newRefreshToken)
-  const response = await createUserResponse(user, brandName)
-  res.set('x-access-token', newAccessToken);
-  res.set('x-refresh-token', newRefreshToken);
-  console.log('res headers', res)
-  res.send(response)
 }
 
 
@@ -141,12 +136,7 @@ export const recovery = (req, res, next) => {
     body: { email },
     params: { brandName }
   } = req
-  return new Promise((resolve, reject) => {
-    crypto.randomBytes(20, (error, buf) => {
-      if (error) return reject(error)
-      resolve(buf.toString('hex'));
-    })
-  })
+  return createToken()
   .then(resetToken => {
     User.findOne({ 'values.email': email.toLowerCase(), brandName })
     .then(user => {

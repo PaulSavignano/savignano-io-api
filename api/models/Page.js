@@ -35,12 +35,12 @@ PageSchema.pre('findOne', autopopulate)
 PageSchema.post('findOneAndRemove', function(doc, next) {
   if (doc.backgroundImage && doc.backgroundImage.src) {
     deleteFile({ Key: doc.backgroundImage.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
   doc.sections.forEach(section => {
     return Section.findOneAndRemove({ _id: section })
-    .catch(error => console.log(error))
+    .then(data => console.info('Section findOneAndRemove: ', data))
+    .catch(error => console.error(error))
   })
   next()
 })

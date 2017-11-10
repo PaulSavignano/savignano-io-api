@@ -33,15 +33,10 @@ export const add = (req, res) => {
 }
 
 export const get = async (req, res) => {
-  console.log('req ip', req.ip)
-  console.log('req headers x-forwarded-for', req.headers['x-forwarded-for'])
   const { brandName } = req.params
   try {
     const pages = await Page.find({ brandName })
-    if (!pages) {
-      console.log('no pages here')
-      throw 'There were no pages found'
-    }
+    if (!pages) throw 'There were no pages found'
     res.send(pages)
   } catch (error) {
     console.error({ error });
@@ -143,8 +138,7 @@ export const updateWithDeleteBackgroundImage = async (req, res) => {
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
-    const deleteData = await deleteFile({ Key: oldBackgroundImageSrc })
-    console.log(deleteData)
+    await deleteFile({ Key: oldBackgroundImageSrc })
     const page = await Page.findOneAndUpdate(
       { _id, brandName },
       { $set: {

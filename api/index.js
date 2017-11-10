@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import path from 'path'
 import mongoose from './db/mongoose'
-import cors from 'cors'
 import expressValidator from 'express-validator'
 import helmet from 'helmet'
 import dns from 'dns'
@@ -26,12 +25,12 @@ import users from './routes/users'
 const app = express()
 const port = process.env.PORT
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-  res.header('Access-Control-Expose-Headers', 'x-access-token, x-refresh-token');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token");
-  next();
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token")
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
+  res.header('Access-Control-Expose-Headers', 'x-access-token, x-refresh-token')
+  next()
 })
 
 app.use(bodyParser.json({limit: '50mb'}))
@@ -51,8 +50,6 @@ app.use('/api/products', products)
 app.use('/api/sections', sections)
 app.use('/api/users', users)
 
-console.log('past routes')
-
 app.get('/', (req, res) => {
   res.send(`
     <div style="display: flex; flex-flow: column; justify-content: center; align-items: center; height: 85vh;">
@@ -61,6 +58,6 @@ app.get('/', (req, res) => {
   `)
 })
 
-app.listen(port, () => console.log(`Started up at port: ${port}`))
+app.listen(port, () => console.info(`Api running at port: ${port}`))
 
 export default app

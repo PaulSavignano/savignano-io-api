@@ -35,11 +35,9 @@ const ArticleSchema = new Schema({
   timestamps: true
 })
 
-
 ArticleSchema.post('findOneAndRemove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
 })
@@ -47,7 +45,6 @@ ArticleSchema.post('findOneAndRemove', function(doc) {
 ArticleSchema.post('remove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
 })

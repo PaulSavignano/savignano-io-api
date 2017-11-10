@@ -42,25 +42,29 @@ const SectionSchema = new Schema({
 SectionSchema.post('findOneAndRemove', function(doc, next) {
   if (doc.backgroundImage && doc.backgroundImage.src) {
     deleteFile({ Key: doc.backgroundImage.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
   doc.items.forEach(item => {
     switch(item.kind) {
       case 'Article':
         return Article.findOneAndRemove({ _id: item.item })
+        .then(data => console.info('Article.findOneAndRemove(): ', data))
         .catch(error => console.error({ error }))
       case 'Card':
         return Card.findOneAndRemove({ _id: item.item })
+        .then(data => console.info('Card.findOneAndRemove(): ', data))
         .catch(error => console.error({ error }))
       case 'ContactForm':
         return ContactForm.findOneAndRemove({ _id: item.item })
+        .then(data => console.info('ContactForm.findOneAndRemove(): ', data))
         .catch(error => console.error({ error }))
       case 'Hero':
         return Hero.findOneAndRemove({ _id: item.item })
+        .then(data => console.info('Hero.findOneAndRemove(): ', data))
         .catch(error => console.error({ error }))
       case 'Product':
         return Product.findOneAndRemove({ _id: item.item })
+        .then(data => console.info('Product.findOneAndRemove(): ', data))
         .catch(error => console.error({ error }))
       default:
         return

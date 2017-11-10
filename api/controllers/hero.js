@@ -109,19 +109,18 @@ export const updateWithImageAndDeleteBackgroundImage = (req, res) => {
   } = req
   const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
+  .then(() => {
     return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
     .then(data => {
       return Hero.findOneAndUpdate(
         { _id, brandName },
         { $set: {
-          backgroundImage: {
-            src: Key,
-            width: newBackgroundImage.width,
-            height: newBackgroundImage.height
+          image: {
+            src: imageKey,
+            width: newImage.width,
+            height: newImage.height
           },
-          'image.src': null,
+          'backgroundImage.src': null,
           values
         }},
         { new: true }
@@ -153,15 +152,14 @@ export const updateWithBackgroundImageAndDeleteImage = (req, res) => {
   } = req
   const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return deleteFile({ Key: oldImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
+  .then(() => {
     return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
     .then(data => {
       return Hero.findOneAndUpdate(
         { _id, brandName },
         { $set: {
           backgroundImage: {
-            src: Key,
+            src: backgroundImageKey,
             width: newBackgroundImage.width,
             height: newBackgroundImage.height
           },
@@ -189,11 +187,9 @@ export const updateWithDeleteImageAndDeleteBackgroundImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(deleteData1 => {
-    console.log(deleteData1)
+  .then(() => {
     return deleteFile({ Key: oldBackgroundImageSrc })
-    .then(deleteData2 => {
-      console.log(deleteData2)
+    .then(() => {
       return Hero.findOneAndUpdate(
         { _id, brandName },
         { $set: {
@@ -228,12 +224,12 @@ export const updateWithImage = (req, res) => {
   } = req
   const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
-  .then(data => {
-    return Hero.findOneAndUpdate(
+  .then(() => {
+    Hero.findOneAndUpdate(
       { _id, brandName },
       { $set: {
         image: {
-          src: Key,
+          src: imageKey,
           width: newImage.width,
           height: newImage.height
         },
@@ -269,7 +265,7 @@ export const updateWithBackgroundImage = (req, res) => {
       { _id, brandName },
       { $set: {
         backgroundImage: {
-          src: Key,
+          src: backgroundImageKey,
           width: newBackgroundImage.width,
           height: newBackgroundImage.height
         },
@@ -294,8 +290,7 @@ export const updateWithDeleteImage = (req, res) => {
     params: { _id, brandName }
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
+  .then(() => {
     return Hero.findOneAndUpdate(
       { _id, brandName },
       { $set: {
@@ -321,8 +316,7 @@ export const updateWithDeleteBackgroundImage = (req, res) => {
     params: { _id, brandName },
   } = req
   return deleteFile({ Key: oldBackgroundImageSrc })
-  .then(deleteData => {
-    console.log(deleteData)
+  .then(() => {
     return Hero.findOneAndUpdate(
       { _id, brandName },
       { $set: {

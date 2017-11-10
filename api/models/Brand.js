@@ -1,5 +1,17 @@
 import mongoose, { Schema } from 'mongoose'
 
+import Address from './Address'
+import ApiConfig from './ApiConfig'
+import Article from './Article'
+import Card from './Card'
+import Cart from './Cart'
+import ContactForm from './ContactForm'
+import Hero from './Hero'
+import Order from './Order'
+import Page from './Page'
+import Product from './Product'
+import Section from './Section'
+import User from './User'
 import { deleteFile } from '../utils/s3'
 
 const BrandSchema = new Schema({
@@ -220,30 +232,33 @@ BrandSchema.post('findOneAndRemove', function(doc) {
   const { appBar, footer } = doc
   if (appBar.image.src) {
     deleteFile({ Key: appBar.image.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
   if (footer.image.src) {
     deleteFile({ Key: footer.image.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
   if (footer.backgroundImage.src) {
     deleteFile({ Key: footer.backgroundImage.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
   if (body.backgroundImage.src) {
     deleteFile({ Key: body.backgroundImage.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
-  Address.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
-  ApiConfig.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
-  Cart.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
-  Order.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
-  Page.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
-  User.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+
+  Address.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Address deleteMany', deletes)).catch(error => console.error(error))
+  ApiConfig.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('ApiConfig deleteMany', deletes)).catch(error => console.error(error))
+  Article.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Article deleteMany', deletes)).catch(error => console.error(error))
+  Card.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Card deleteMany', deletes)).catch(error => console.error(error))
+  Cart.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Cart deleteMany', deletes)).catch(error => console.error(error))
+  ContactForm.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('ContactForm deleteMany', deletes)).catch(error => console.error(error))
+  Hero.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Hero deleteMany', deletes)).catch(error => console.error(error))
+  Order.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Order deleteMany', deletes)).catch(error => console.error(error))
+  Page.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Page deleteMany', deletes)).catch(error => console.error(error))
+  Product.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Product deleteMany', deletes)).catch(error => console.error(error))
+  Section.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Section deleteMany', deletes)).catch(error => console.error(error))
+  User.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('User deleteMany', deletes)).catch(error => console.error(error))
 })
 
 const Brand = mongoose.model('Brand', BrandSchema)

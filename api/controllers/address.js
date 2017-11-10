@@ -103,9 +103,9 @@ export const update = (req, res) => {
   .then(address => {
     User.findOne({ _id: address.user, brandName })
     .then(user => res.send(user))
-    .catch(error => { console.log({ error }); res.status(400).send({ error })})
+    .catch(error => { console.error({ error }); res.status(400).send({ error })})
   })
-  .catch(error => { console.log(error); res.status(400).send({ error })})
+  .catch(error => { console.error(error); res.status(400).send({ error })})
 }
 
 export const adminUpdate = (req, res) => {
@@ -127,7 +127,7 @@ export const adminUpdate = (req, res) => {
     .then(user => res.send(user))
     .catch(error => { console.error(error); res.status(400).send({ error })})
   })
-  .catch(error => { console.log(error); res.status(400).send({ error })})
+  .catch(error => { console.error(error); res.status(400).send({ error })})
 }
 
 

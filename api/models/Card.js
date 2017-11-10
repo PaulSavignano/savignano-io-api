@@ -32,7 +32,6 @@ const CardSchema = new Schema({
 CardSchema.post('findOneAndRemove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
-    .then(data => console.log(data))
     .catch(err => console.error(err))
   }
 })

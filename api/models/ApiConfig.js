@@ -15,7 +15,6 @@ const ApiConfigSchema = new Schema({
   timestamps: true
 })
 
-
 const ApiConfig = mongoose.model('ApiConfig', ApiConfigSchema)
 
 export default ApiConfig

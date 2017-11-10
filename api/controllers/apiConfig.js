@@ -3,7 +3,6 @@ import { ObjectID } from 'mongodb'
 import ApiConfig from '../models/ApiConfig'
 
 export const add = (req, res) => {
-  console.log('inside add')
   const {
     body: { values },
     params: { brandName }
@@ -28,13 +27,11 @@ export const get = async (req, res) => {
 
 
 export const update = async (req, res) => {
-  console.log('inside update')
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id' })
   const {
     body: { values },
     params: { _id, brandName },
   } = req
-  console.log('updating', _id, brandName, values)
   try {
     const config = await ApiConfig.findOneAndUpdate(
       { _id, brandName },

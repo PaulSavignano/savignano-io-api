@@ -110,8 +110,7 @@ export const updateWithDeleteImage = (req, res) => {
     params: { _id, brandName },
   } = req
   return deleteFile({ Key: oldImageSrc })
-  .then(data => {
-    console.log(data)
+  .then(() => {
     Article.findOneAndUpdate(
       { _id, brandName },
       { $set: { 'image.src': null }},
