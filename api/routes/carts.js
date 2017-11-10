@@ -10,9 +10,9 @@ import {
 
 const carts = express.Router()
 
-carts.post('/:clientName', add)
-carts.get('/:clientName/:_id', getId)
-carts.patch('/:clientName/:_id', update)
-carts.delete('/:clientName/:_id', remove)
+carts.post('/:brandName', add)
+carts.get('/:brandName/:_id', getId)
+carts.patch('/:brandName/:_id', update)
+carts.delete('/:brandName/:_id', remove)
 
 export default carts

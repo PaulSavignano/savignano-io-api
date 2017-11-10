@@ -10,10 +10,10 @@ const sendGmail = async ({
   toBody,
   fromSubject,
   fromBody,
-  clientName
+  brandName
 }) => {
   try {
-    const apiConfig = await ApiConfig.findOne({ clientName })
+    const apiConfig = await ApiConfig.findOne({ brandName })
     if (!apiConfig) throw 'Email not sent, no apiConfig was found'
     console.log('apiConfig', apiConfig)
     const {
@@ -27,7 +27,7 @@ const sendGmail = async ({
     console.log('oauthClientId', oauthClientId)
     console.log('oauthClientSecret', oauthClientSecret)
     console.log('oauthRefreshToken', oauthRefreshToken)
-    const brand = await Brand.findOne({ clientName })
+    const brand = await Brand.findOne({ brandName })
     if (!brand) throw 'Email not sent, no brand was found'
     const {
       appBar: {
@@ -92,7 +92,7 @@ const sendGmail = async ({
          <main>
           ${body}
           <br/><br/>
-          <a href=${clientName}>
+          <a href=${brandName}>
             ${image && image.src ? `<img src=${image.src} alt="item" height="64px" width="auto"/>` : ''}
             <div>
               <span

@@ -60,6 +60,7 @@ const BrandSchema = new Schema({
       color: { type: String, trim: true, maxlength: 25 },
     }
   },
+  brandName: { type: String, maxlength: 90, required: true, unique: true },
   business: {
     image: {
       src: { type: String, trim: true, maxlength: 150 },
@@ -104,7 +105,6 @@ const BrandSchema = new Schema({
       mediaBorder: { type: String, trim: true, maxlength: 50 },
     }
   },
-  clientName: { type: String, maxlength: 90, required: true, unique: true },
   footer: {
     backgroundImage: {
       src: { type: String, trim: true, maxlength: 150 },
@@ -238,6 +238,12 @@ BrandSchema.post('findOneAndRemove', function(doc) {
     .then(data => console.log(data))
     .catch(err => console.error(err))
   }
+  Address.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+  ApiConfig.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+  Cart.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+  Order.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+  Page.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
+  User.deleteMany({ brandName: doc.brandName }).then(deletes => console.log({ deletes })).catch(error => console.error(error))
 })
 
 const Brand = mongoose.model('Brand', BrandSchema)

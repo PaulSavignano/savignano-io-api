@@ -12,13 +12,13 @@ export const add = (req, res) => {
     body: {
       values: { name }
     },
-    params: { clientName }
+    params: { brandName }
   } = req
-  Page.findOne({ 'values.name': name, clientName })
+  Page.findOne({ 'values.name': name, brandName })
   .then(page => {
     if (!page) {
       const newPage = new Page({
-        clientName,
+        brandName,
         slug: slugIt(name),
         values: { name }
       })
@@ -35,9 +35,9 @@ export const add = (req, res) => {
 export const get = async (req, res) => {
   console.log('req ip', req.ip)
   console.log('req headers x-forwarded-for', req.headers['x-forwarded-for'])
-  const { clientName } = req.params
+  const { brandName } = req.params
   try {
-    const pages = await Page.find({ clientName })
+    const pages = await Page.find({ brandName })
     if (!pages) {
       console.log('no pages here')
       throw 'There were no pages found'
@@ -53,17 +53,17 @@ export const update = async (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
     body: { values },
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, clientName })
+    const existingPage = await Page.findOne({ _id, brandName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, brandName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
     const page = await Page.findOneAndUpdate(
-      { _id, clientName },
+      { _id, brandName },
       { $set: { slug, values }},
       { new: true }
     )
@@ -88,19 +88,19 @@ export const updateWithBackgroundImage = async (req, res) => {
       pageSlug,
       values
     },
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, clientName })
+    const existingPage = await Page.findOne({ _id, brandName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, brandName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
-    const Key = `${clientName}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+    const Key = `${brandName}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
     const data = await uploadFile({ Key }, newBackgroundImage.src, oldBackgroundImageSrc)
     const page = await Page.findOneAndUpdate(
-      { _id, clientName },
+      { _id, brandName },
       { $set: {
         backgroundImage: {
           src: Key,
@@ -134,19 +134,19 @@ export const updateWithDeleteBackgroundImage = async (req, res) => {
       type,
       values
     },
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, clientName })
+    const existingPage = await Page.findOne({ _id, brandName })
     if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, clientName })
+      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, brandName })
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
     const deleteData = await deleteFile({ Key: oldBackgroundImageSrc })
     console.log(deleteData)
     const page = await Page.findOneAndUpdate(
-      { _id, clientName },
+      { _id, brandName },
       { $set: {
         'backgroundImage.src': null,
         slug,
@@ -170,9 +170,9 @@ export const updateWithDeleteBackgroundImage = async (req, res) => {
 export const remove = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
-  Page.findOneAndRemove({ _id, clientName })
+  Page.findOneAndRemove({ _id, brandName })
   .then(page => res.send(page))
   .catch(error => { console.error(error); res.status(400).send({ error })})
 }

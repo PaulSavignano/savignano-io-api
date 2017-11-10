@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import AccessToken from '../models/AccessToken'
 import RefreshToken from '../models/RefreshToken'
 
-const createTokens = async (user, clientName) => {
+const createTokens = async (user, brandName) => {
   const newAccessToken = jwt.sign({
     accessToken: 123456789
   }, process.env.JWT_SECRET, { expiresIn: '24h' })
@@ -15,13 +15,13 @@ const createTokens = async (user, clientName) => {
   try {
     await new AccessToken({
       accessToken: newAccessToken,
-      clientName,
+      brandName,
       user: user._id
     }).save()
 
     await new RefreshToken({
       refreshToken: newRefreshToken,
-      clientName,
+      brandName,
       user: user._id
     }).save()
 

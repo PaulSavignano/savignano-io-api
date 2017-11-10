@@ -9,7 +9,7 @@ const PageSchema = new Schema({
     width: { type: Number, trim: true, default: 1920, max: 10000, min: 0 },
     height: { type: Number, trim: true, default: 1080, max: 10000, min: 0 }
   },
-  clientName: { type: String, maxlength: 90, required: true, },
+  brandName: { type: String, maxlength: 90, required: true, },
   sections: [{ type: Schema.Types.ObjectId, ref: 'Section' }],
   slug: { type: String },
   values: {

@@ -15,18 +15,18 @@ export const adminAdd = async (req, res) => {
       lastName,
       password
     },
-    params: { clientName }
+    params: { brandName }
   } = req
   if ( !email || !firstName || !firstName || !password) {
     return res.status(422).send({ error: 'You must provide all fields' });
   }
   try {
-    const existingUser = await User.findOne({ 'values.email': email, clientName })
+    const existingUser = await User.findOne({ 'values.email': email, brandName })
     if (existingUser) {
       throw 'that user already exists'
     }
     const user = await new User({
-      clientName,
+      brandName,
       password,
       values: { email, firstName, lastName }
     }).save()
@@ -38,9 +38,9 @@ export const adminAdd = async (req, res) => {
 
 
 export const adminGet = async (req, res) => {
-  const { clientName } = req.params
+  const { brandName } = req.params
   try {
-    const users = await User.find({ clientName })
+    const users = await User.find({ brandName })
     if (users) return res.send(users)
   } catch (error) {
     console.error(error)
@@ -51,15 +51,15 @@ export const adminGet = async (req, res) => {
 export const adminUpdate = async (req, res) => {
   const {
     body: { values, type },
-    params: { _id, clientName },
+    params: { _id, brandName },
   } = req
   try {
-    const existingUser = await User.findOne({ _id, clientName })
+    const existingUser = await User.findOne({ _id, brandName })
     if (!existingUser) throw 'User not found'
     switch(type) {
       case 'UPDATE_VALUES':
         return User.findOneAndUpdate(
-          { _id, clientName },
+          { _id, brandName },
           { $set: { values }},
           { new: true }
         )
@@ -93,9 +93,9 @@ export const adminUpdate = async (req, res) => {
 
 export const adminRemove = (req, res) => {
   const {
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
-  User.findOneAndRemove({ _id, clientName })
+  User.findOneAndRemove({ _id, brandName })
   .then(doc => res.send(doc))
   .catch(error => { console.error({ error }); res.status(400).send({ error })})
 }

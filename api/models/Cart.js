@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 const CartSchema = new Schema({
-  clientName: { type: String, maxlength: 90, required: true },
+  brandName: { type: String, maxlength: 90, required: true },
   items: [{
     image: {
       src: { type: String, minlength: 1, trim: true, maxlength: 150 }

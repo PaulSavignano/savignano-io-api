@@ -10,9 +10,9 @@ import {
 
 const apiConfigs = express.Router()
 
-apiConfigs.post('/:clientName', authenticate([ 'owner' ]), add)
-apiConfigs.get('/:clientName', authenticate([ 'owner' ]), get)
-apiConfigs.patch('/:clientName/:_id', authenticate([ 'owner' ]), update)
-apiConfigs.delete('/:clientName/:_id', authenticate([ 'owner' ]), remove)
+apiConfigs.post('/:brandName', authenticate([ 'owner' ]), add)
+apiConfigs.get('/:brandName', authenticate([ 'owner' ]), get)
+apiConfigs.patch('/:brandName/:_id', authenticate([ 'owner' ]), update)
+apiConfigs.delete('/:brandName/:_id', authenticate([ 'owner' ]), remove)
 
 export default apiConfigs

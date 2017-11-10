@@ -21,12 +21,12 @@ export const add = (req, res, next) => {
       zip,
       cart
     },
-    params: { clientName },
+    params: { brandName },
     user: { _id }
   } = req
   if (fullAddress === 'newAddress') {
     const newAddress = new Address({
-      clientName,
+      brandName,
       user: ObjectID(_id),
       values: {
         name,
@@ -40,7 +40,7 @@ export const add = (req, res, next) => {
     newAddress.save()
     .then(address => {
       return User.findOneAndUpdate(
-        { _id, clientName },
+        { _id, brandName },
         { $push: { addresses: address._id }},
         { new: true }
       )
@@ -56,7 +56,7 @@ export const add = (req, res, next) => {
     })
     .catch(error => { console.error(error); res.status(400).send({ error })})
   } else {
-    return Address.findOne({ _id: fullAddress, clientName })
+    return Address.findOne({ _id: fullAddress, brandName })
     .then(address => {
       return User.findOne({ _id })
       .then(user => createCharge({
@@ -76,7 +76,7 @@ export const add = (req, res, next) => {
 const createCharge = async ({
   address,
   cart,
-  req: { params: { clientName }},
+  req: { params: { brandName }},
   res,
   stripeToken,
   user
@@ -86,7 +86,7 @@ const createCharge = async ({
     values: { firstName, lastName, email }
   } = user
   try {
-    const apiConfig = await ApiConfig.findOne({ clientName })
+    const apiConfig = await ApiConfig.findOne({ brandName })
     const { values: { stripeSkLive, stripeSkTest }} = apiConfig
     if (!stripeSkLive && !stripeSkTest) throw 'Unable to create charge, no stripe api keys found'
     const stripe = require("stripe")(stripeSkLive || stripeSkTest)
@@ -94,7 +94,7 @@ const createCharge = async ({
       amount: Math.round(cart.total),
       currency: "usd",
       source: stripeToken,
-      description: `${clientName} Order`
+      description: `${brandName} Order`
     })
     if (!charge) throw 'Unable to create charge,'
     const order = await new Order({
@@ -102,7 +102,7 @@ const createCharge = async ({
       cart,
       email,
       firstName,
-      clientName,
+      brandName,
       lastName,
       paymentId: charge.id,
       total: cart.total,
@@ -131,7 +131,7 @@ const createCharge = async ({
       <div>${city}, ${state} ${zip}</div>
     `
     const mailData = await sendGmail({
-      clientName,
+      brandName,
       to: email,
       toSubject: 'Thank you for your order!',
       toBody: `
@@ -143,7 +143,7 @@ const createCharge = async ({
       fromBody: `
         <p>${firstName} ${lastName} just placed order an order!</p>
         ${htmlOrder}
-        <p>Once shipped, you can mark the item as shipped in at <a href="${clientName}/admin/orders">${clientName}/admin/orders</a> to send confirmation to ${firstName}.</p>
+        <p>Once shipped, you can mark the item as shipped in at <a href="${brandName}/admin/orders">${brandName}/admin/orders</a> to send confirmation to ${firstName}.</p>
       `
     })
     console.log(mailData)
@@ -158,11 +158,11 @@ const createCharge = async ({
 
 export const get = async (req, res) => {
   const {
-    params: { clientName },
+    params: { brandName },
     user
   } = req
   try {
-    const orders = await Order.find({ user: user._id, clientName })
+    const orders = await Order.find({ user: user._id, brandName })
     if (!orders) throw 'No orders found'
     res.send(orders)
   } catch (error) {
@@ -172,9 +172,9 @@ export const get = async (req, res) => {
 }
 
 export const getAdmin = async (req, res) => {
-  const { clientName } = req
+  const { brandName } = req
   try {
-    const orders = await Order.find({ clientName })
+    const orders = await Order.find({ brandName })
     if (!orders) throw 'No orders found'
     res.send(orders)
   } catch (error) {
@@ -189,12 +189,12 @@ export const update = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {
     body: { type },
-    params: { _id, clientName }
+    params: { _id, brandName }
   } = req
   switch (type) {
     case 'SHIPPED':
       Order.findOneAndUpdate(
-        { _id, clientName },
+        { _id, brandName },
         { $set: { shipped: true, shipDate: new Date() }},
         { new: true }
       )
@@ -203,7 +203,7 @@ export const update = (req, res) => {
         const { name, phone, street, city, state, zip } = address
         res.send(order)
         sendGmail({
-          clientName,
+          brandName,
           to: email,
           toSubject: 'Your order has shipped!',
           toBody: `

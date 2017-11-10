@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 const ApiConfigSchema = new Schema({
-  clientName: { type: String, maxlength: 90, required: true, unique: true },
+  brandName: { type: String, maxlength: 90, required: true, unique: true },
   values: {
     gmailUser: { type: String, trim: true, maxlength: 150 },
     oauthAccessToken: { type: String, trim: true, maxlength: 150 },

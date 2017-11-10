@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 import { uploadFile, deleteFile } from '../utils/s3'
 
 const CardSchema = new Schema({
-  clientName: { type: String, maxlength: 90, required: true },
+  brandName: { type: String, maxlength: 90, required: true },
   image: {
     src: { type: String, trim: true, maxlength: 150 },
     width: { type: Number, trim: true, default: 1000, max: 10000, min: 0 },

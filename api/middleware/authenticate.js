@@ -16,9 +16,9 @@ const authenticate = (requiredRoles) => {
         const refreshToken = req.headers['x-refresh-token']
         if (refreshToken) {
           try {
-            const { clientName } = req.params
+            const { brandName } = req.params
             const { user } = await RefreshToken.findOne({ refreshToken }).populate('user')
-            const { newAccessToken, newRefreshToken } = await createTokens(user, clientName)
+            const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
             if (newAccessToken && newRefreshToken) {
               req.user = user
               res.set('x-access-token', newAccessToken)
