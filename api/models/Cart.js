@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 const CartSchema = new Schema({
   brandName: { type: String, maxlength: 90, required: true },
+  createdAt: { type: Date, default: Date.now, expires: '60d' },
   items: [{
     image: {
       src: { type: String, minlength: 1, trim: true, maxlength: 150 }
@@ -17,8 +18,7 @@ const CartSchema = new Schema({
   subTotal: { type: Number, max: 100000, min: 0 },
   tax: { type: Number, default: .075, max: 100, min: 0.000 },
   total: { type: Number, max: 100000, min: 0 },
-}, {
-  timestamps: true
+  updatedAt: { type: Date, default: Date.now },
 })
 
 const Cart = mongoose.model('Cart', CartSchema)

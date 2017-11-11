@@ -3,13 +3,6 @@
   "AWS_ACCESS_KEY_ID": "",
   "AWS_SECRET_ACCESS_KEY": "",
   "AWS_S3_BUCKET": "",
-  "GMAIL_USER": "",
-  "JWT_SECRET": "",
   "MONGODB_URI": "",
-  "OAUTH_ACCESS_TOKEN": "",
-  "OAUTH_CLIENT_ID": "",
-  "OAUTH_CLIENT_SECRET": "",
-  "OAUTH_REFRESH_TOKEN": "",
   "PORT": 3001,
-  "STRIPE_SK_TEST": ""
 }

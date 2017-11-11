@@ -1,10 +1,11 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import path from 'path'
-import mongoose from './db/mongoose'
+import dns from 'dns'
 import expressValidator from 'express-validator'
 import helmet from 'helmet'
-import dns from 'dns'
+import path from 'path'
+
+import mongoose from './db/mongoose'
 
 import addresses from './routes/addresses'
 import apiConfigs from './routes/apiConfigs'
@@ -21,15 +22,14 @@ import products from './routes/products'
 import sections from './routes/sections'
 import users from './routes/users'
 
-
 const app = express()
 const port = process.env.PORT
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token, x-refresh-token, cart")
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
-  res.header('Access-Control-Expose-Headers', 'x-access-token, x-refresh-token')
+  res.header('Access-Control-Expose-Headers', 'x-access-token, x-refresh-token, cart')
   next()
 })
 

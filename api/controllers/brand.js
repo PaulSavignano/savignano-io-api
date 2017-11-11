@@ -602,6 +602,7 @@ export const updateFooterValues = (req, res) => {
 
 
 export const updateHeroStyle = (req, res) => {
+  console.log('inside update heroStyle')
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalide id'})
   const {
     body: {

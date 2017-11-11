@@ -43,7 +43,7 @@ export const add = (req, res, next) => {
         { _id, brandName },
         { $push: { addresses: address._id }},
         { new: true }
-      )
+      ).populate({ path: 'addresses',  select: '-user' })
       .then(user => createCharge({
         address,
         cart,
@@ -108,9 +108,8 @@ const createCharge = async ({
       total: cart.total,
       user: _id,
     }).save()
-
+    res.send({ order, user })
     const { name, phone, street, city, state, zip } = address
-
     const htmlOrder = `
       <div style="font-weight: 900">Order Summary</div>
       <div>Order: ${order._id}</div>
@@ -146,7 +145,6 @@ const createCharge = async ({
         <p>Once shipped, you can mark the item as shipped in at <a href="${brandName}/admin/orders">${brandName}/admin/orders</a> to send confirmation to ${firstName}.</p>
       `
     })
-    res.send({ order, user })
   } catch (error) {
     console.error(error)
     res.status(400).send({ error })
