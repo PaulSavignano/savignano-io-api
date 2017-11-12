@@ -377,12 +377,12 @@ export const updateFooterWithImageAndDeleteBackgroundImage = (req, res) => {
       return Brand.findOneAndUpdate(
         { _id, brandName },
         { $set: {
-          'footer.backgroundImage': {
-            src: Key,
-            width: newBackgroundImage.width,
-            height: newBackgroundImage.height
+          'footer.image': {
+            src: imageKey,
+            width: newImage.width,
+            height: newImage.height
           },
-          'footer.image.src': null,
+          'footer.backgroundImage.src': null,
           'footer.values': values
         }},
         { new: true }
@@ -417,7 +417,7 @@ export const updateFooterWithBackgroundImageAndDeleteImage = (req, res) => {
         { _id, brandName },
         { $set: {
           'footer.backgroundImage': {
-            src: Key,
+            src: backgroundImageKey,
             width: newBackgroundImage.width,
             height: newBackgroundImage.height
           },
@@ -515,7 +515,7 @@ export const updateFooterWithBackgroundImage = (req, res) => {
       { _id, brandName },
       { $set: {
         'footer.backgroundImage': {
-          src: Key,
+          src: backgroundImageKey,
           width: newBackgroundImage.width,
           height: newBackgroundImage.height
         },
