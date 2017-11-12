@@ -27,14 +27,14 @@ export const add = async (req, res) => {
     return res.status(422).send({ error: 'You must provide all fields' });
   }
   try {
-    const existingUser = await User.findOne({ 'values.email': email, brandName })
+    const existingUser = await User.findOne({ 'values.email': email.toLowerCase(), brandName })
     if (existingUser) {
       throw 'That user already exists'
     }
     const user = await new User({
       brandName,
       password,
-      values: { email, firstName, lastName }
+      values: { email: email.toLowerCase(), firstName, lastName }
     }).save()
     const { newAccessToken, newRefreshToken } = await createTokens(user, brandName)
     const { values } = user
@@ -84,7 +84,7 @@ export const update = (req, res) => {
   user.values = {
     firstName: values.firstName,
     lastName: values.lastName,
-    email: values.email,
+    email: values.email.toLowerCase(),
     phone: values.phone
   }
   user.save()
@@ -113,7 +113,7 @@ export const signin = async (req, res) => {
     params: { brandName }
   } = req
   try {
-    const user = await User.findOne({ 'values.email': email, brandName })
+    const user = await User.findOne({ 'values.email': email.toLowerCase(), brandName })
     if (!user) throw { email: 'email not found' }
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) throw { password: 'password does not match' }
