@@ -82,14 +82,22 @@ const BrandSchema = new Schema({
     values: {
       city: { type: String, trim: true, maxlength: 100 },
       email: { type: String, trim: true, maxlength: 100 },
+      facebook: { type: String, trim: true, maxlength: 150 },
+      github: { type: String, trim: true, maxlength: 150 },
+      google: { type: String, trim: true, maxlength: 150 },
       googleAnalyticsUA: { type: String, trim: true, maxlength: 150 },
       imageBorderRadius: { type: String, trim: true, maxlength: 50 },
+      instagram: { type: String, trim: true, maxlength: 150 },
       license: { type: String, trim: true, maxlength: 100 },
+      linkedin: { type: String, trim: true, maxlength: 150 },
       name: { type: String, trim: true, default: 'Brand', maxlength: 100 },
       phone: { type: String, trim: true, maxlength: 50 },
       state: { type: String, trim: true, maxlength: 25 },
       street: { type: String, trim: true, maxlength: 100 },
       stripePk: { type: String, trim: true, maxlength: 500 },
+      twitter: { type: String, trim: true, maxlength: 150 },
+      yelp: { type: String, trim: true, maxlength: 150 },
+      youtube: { type: String, trim: true, maxlength: 150 },
       zip: { type: String, trim: true, maxlength: 50 },
     }
   },
@@ -189,16 +197,6 @@ const BrandSchema = new Schema({
       margin: { type: String, trim: true, default: '16px', maxlength: 50 },
       mediaElevation: { type: Number, trim: true, default: 3, max: 24, min: 0 }
     }
-  },
-  socialMedia: {
-    facebook: { type: String, trim: true, maxlength: 150 },
-    github: { type: String, trim: true, maxlength: 150 },
-    google: { type: String, trim: true, maxlength: 150 },
-    instagram: { type: String, trim: true, maxlength: 150 },
-    linkedin: { type: String, trim: true, maxlength: 150 },
-    twitter: { type: String, trim: true, maxlength: 150 },
-    yelp: { type: String, trim: true, maxlength: 150 },
-    youtube: { type: String, trim: true, maxlength: 150 },
   },
   typography: {
     values: {
