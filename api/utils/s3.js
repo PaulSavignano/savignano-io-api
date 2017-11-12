@@ -14,7 +14,7 @@ const ACL = 'public-read'
 export const uploadFile = ({ Key }, imageSrc, oldImageSrc) => {
   const Body = new Buffer(imageSrc.replace(/^data:image\/\w+;base64,/, ""),'base64')
   const params = { Bucket, Key, Body, ACL }
-  if (oldImageSrc) s3.deleteObject({ Bucket, Key: oldImageSrc }).promise()
+  if (oldImageSrc) s3.deleteObject({ Bucket, Key: oldImageSrc }).promise().then(deleteData => console.info('s3 deleteFile oldImageSrc: ', deleteData))
   return s3.upload(params).promise().then(data => {
     console.info('s3 uploadFile: ', data)
     return data

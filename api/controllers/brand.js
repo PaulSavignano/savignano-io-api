@@ -226,7 +226,7 @@ export const updateBusinessWithImage = (req, res) => {
       { _id, brandName },
       { $set: {
         'business.image': {
-          src: Key,
+          src: imageKey,
           width: newImage.width,
           height: newImage.height
         },
