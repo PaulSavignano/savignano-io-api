@@ -81,6 +81,7 @@ const BrandSchema = new Schema({
     },
     values: {
       city: { type: String, trim: true, maxlength: 100 },
+      description: { type: String, trim: true, maxlength: 1000 },
       email: { type: String, trim: true, maxlength: 100 },
       facebook: { type: String, trim: true, maxlength: 150 },
       github: { type: String, trim: true, maxlength: 150 },
@@ -88,6 +89,7 @@ const BrandSchema = new Schema({
       googleAnalyticsUA: { type: String, trim: true, maxlength: 150 },
       imageBorderRadius: { type: String, trim: true, maxlength: 50 },
       instagram: { type: String, trim: true, maxlength: 150 },
+      keywords: { type: String, trim: true, maxlength: 1000 },
       license: { type: String, trim: true, maxlength: 100 },
       linkedin: { type: String, trim: true, maxlength: 150 },
       name: { type: String, trim: true, default: 'Brand', maxlength: 100 },
@@ -277,7 +279,7 @@ BrandSchema.post('findOneAndRemove', function(doc) {
   Section.find({ brandName: doc.brandName })
   .then(items => items.forEach(item => Hero.findOneAndRemove({ _id: item._id })))
   .catch(error => console.error(error))
-  
+
   User.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('User deleteMany', deletes)).catch(error => console.error(error))
 })
 
