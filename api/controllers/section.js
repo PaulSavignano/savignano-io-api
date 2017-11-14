@@ -67,7 +67,7 @@ export const updateWithBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const Key = `${brandName}/page-${pageSlug}/section-${_id}-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${brandName}/page-${pageSlug}/section-${_id}-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     Section.findOneAndUpdate(

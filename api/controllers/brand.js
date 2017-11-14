@@ -47,7 +47,7 @@ export const updateAppBarWithImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/brand-${_id}-appbar-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/brand-${_id}-appbar-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(() => {
     return Brand.findOneAndUpdate(
@@ -143,7 +143,7 @@ export const updateBodyWithBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${brandName}/brand-${_id}-body-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/brand-${_id}-body-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     return Brand.findOneAndUpdate(
@@ -219,7 +219,7 @@ export const updateBusinessWithImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/brand-${_id}-business-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/brand-${_id}-business-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(data => {
     return Brand.findOneAndUpdate(
@@ -317,8 +317,8 @@ export const updateFooterWithImageAndBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
-  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
+  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(imageData => {
     return Brand.findOneAndUpdate(
@@ -369,7 +369,7 @@ export const updateFooterWithImageAndDeleteBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return deleteFile({ Key: oldBackgroundImageSrc })
   .then(() => {
     return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
@@ -408,7 +408,7 @@ export const updateFooterWithBackgroundImageAndDeleteImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return deleteFile({ Key: oldImageSrc })
   .then(() => {
     return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
@@ -476,7 +476,7 @@ export const updateFooterWithImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const Key = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${brandName}/brand-${_id}-footer-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return uploadFile({ Key }, newImage.src, oldImageSrc)
   .then(data => {
     return Brand.findOneAndUpdate(
@@ -508,7 +508,7 @@ export const updateFooterWithBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/brand-${_id}-footer-background-image_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     return Brand.findOneAndUpdate(

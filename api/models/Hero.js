@@ -41,6 +41,12 @@ const HeroSchema = new Schema({
 HeroSchema.post('findOneAndRemove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
+    .then(data => console.info('Hero findOneAndRemove() image remove: ', data))
+    .catch(err => console.error(err))
+  }
+  if (doc.backgroundImage && doc.backgroundImage.src) {
+    deleteFile({ Key: doc.backgroundImage.src })
+    .then(data => console.info('Hero findOneAndRemove() backgroundImage remove: ', data))
     .catch(err => console.error(err))
   }
 })
@@ -48,6 +54,12 @@ HeroSchema.post('findOneAndRemove', function(doc) {
 HeroSchema.post('remove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
+    .then(data => console.info('Hero findOneAndRemove() image remove: ', data))
+    .catch(err => console.error(err))
+  }
+  if (doc.backgroundImage && doc.backgroundImage.src) {
+    deleteFile({ Key: doc.backgroundImage.src })
+    .then(data => console.info('Hero findOneAndRemove() backgroundImage remove: ', data))
     .catch(err => console.error(err))
   }
 })

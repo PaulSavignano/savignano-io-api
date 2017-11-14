@@ -51,8 +51,8 @@ export const updateWithImageAndBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
-  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(imageData => {
     return Hero.findOneAndUpdate(
@@ -107,7 +107,7 @@ export const updateWithImageAndDeleteBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return deleteFile({ Key: oldBackgroundImageSrc })
   .then(() => {
     return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
@@ -150,7 +150,7 @@ export const updateWithBackgroundImageAndDeleteImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return deleteFile({ Key: oldImageSrc })
   .then(() => {
     return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
@@ -222,7 +222,7 @@ export const updateWithImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const imageKey = `${brandName}/page-${pageSlug}/hero-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return uploadFile({ Key: imageKey }, newImage.src, oldImageSrc)
   .then(() => {
     Hero.findOneAndUpdate(
@@ -258,7 +258,7 @@ export const updateWithBackgroundImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const backgroundImageKey = `${brandName}/page-${pageSlug}/hero-background-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
   return uploadFile({ Key: backgroundImageKey }, newBackgroundImage.src, oldBackgroundImageSrc)
   .then(data => {
     return Hero.findOneAndUpdate(

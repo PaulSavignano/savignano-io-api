@@ -12,7 +12,7 @@ import Page from './Page'
 import Product from './Product'
 import Section from './Section'
 import User from './User'
-import { deleteFile } from '../utils/s3'
+import { deleteFile, deleteFiles } from '../utils/s3'
 
 const BrandSchema = new Schema({
   appBar: {
@@ -245,17 +245,39 @@ BrandSchema.post('findOneAndRemove', function(doc) {
     .catch(err => console.error(err))
   }
 
+
+
   Address.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Address deleteMany', deletes)).catch(error => console.error(error))
   ApiConfig.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('ApiConfig deleteMany', deletes)).catch(error => console.error(error))
-  Article.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Article deleteMany', deletes)).catch(error => console.error(error))
-  Card.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Card deleteMany', deletes)).catch(error => console.error(error))
+
+  Article.find({ brandName: doc.brandName })
+  .then(items => items.length && items.forEach(item => Article.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+
+  Card.find({ brandName: doc.brandName })
+  .then(items => items.length && items.forEach(item => Card.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+
   Cart.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Cart deleteMany', deletes)).catch(error => console.error(error))
   ContactForm.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('ContactForm deleteMany', deletes)).catch(error => console.error(error))
-  Hero.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Hero deleteMany', deletes)).catch(error => console.error(error))
+
+  Hero.find({ brandName: doc.brandName })
+  .then(items => items.length && items.forEach(item => Hero.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+
   Order.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Order deleteMany', deletes)).catch(error => console.error(error))
-  Page.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Page deleteMany', deletes)).catch(error => console.error(error))
-  Product.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Product deleteMany', deletes)).catch(error => console.error(error))
-  Section.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('Section deleteMany', deletes)).catch(error => console.error(error))
+  Page.find({ brandName: doc.brandName })
+  .then(items => items.length && items.forEach(item => Page.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+
+  Product.find({ brandName: doc.brandName })
+  .then(items => items.length && items.forEach(item => Hero.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+
+  Section.find({ brandName: doc.brandName })
+  .then(items => items.forEach(item => Hero.findOneAndRemove({ _id: item._id })))
+  .catch(error => console.error(error))
+  
   User.deleteMany({ brandName: doc.brandName }).then(deletes => console.info('User deleteMany', deletes)).catch(error => console.error(error))
 })
 

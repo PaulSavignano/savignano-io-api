@@ -38,6 +38,7 @@ const ArticleSchema = new Schema({
 ArticleSchema.post('findOneAndRemove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
+    .then(data => console.info('Article findOneAndRemove image remove: ', data))
     .catch(err => console.error(err))
   }
 })
@@ -45,9 +46,11 @@ ArticleSchema.post('findOneAndRemove', function(doc) {
 ArticleSchema.post('remove', function(doc) {
   if (doc.image && doc.image.src) {
     deleteFile({ Key: doc.image.src })
+    .then(data => console.info('Article findOneAndRemove image remove: ', data))
     .catch(err => console.error(err))
   }
 })
+
 
 const Article = mongoose.model('Article', ArticleSchema)
 

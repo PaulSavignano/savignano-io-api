@@ -16,6 +16,6 @@ articles.patch('/:brandName/:_id/update-values', authenticate(['admin']), update
 articles.patch('/:brandName/:_id/update-with-image', authenticate(['admin']), updateWithImage)
 articles.patch('/:brandName/:_id/update-with-delete-image', authenticate(['admin']), updateWithDeleteImage)
 
-articles.delete('/:_id', authenticate(['admin']), remove)
+articles.delete('/:brandName/:_id', authenticate(['admin']), remove)
 
 export default articles

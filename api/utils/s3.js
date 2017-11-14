@@ -22,7 +22,8 @@ export const uploadFile = ({ Key }, imageSrc, oldImageSrc) => {
 }
 
 export const deleteFile = ({ Key }) => {
-  const params = { Bucket, Key: `${process.env.AWS_S3_PATH}${Key}` }
+  console.log('Key', Key)
+  const params = { Bucket, Key }
   return s3.deleteObject(params).promise().then(data => {
     console.info('s3 deleteFile: ', data)
     return data

@@ -83,7 +83,7 @@ export const updateWithImage = (req, res) => {
     },
     params: { _id, brandName }
   } = req
-  const Key = `${brandName}/page-${pageSlug}/product-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+  const Key = `${brandName}/page-${pageSlug}/product-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newImage.ext}`
   return uploadFile({ Key }, newImage.src, oldImageSrc)
   .then(data => {
     Product.findOneAndUpdate(

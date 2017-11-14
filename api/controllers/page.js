@@ -92,7 +92,7 @@ export const updateWithBackgroundImage = async (req, res) => {
       if (nameAlreadyExists) throw 'That page name already exists'
     }
     const slug = slugIt(values.name)
-    const Key = `${brandName}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}`
+    const Key = `${brandName}/page-${pageSlug}-background-image-${_id}_${moment(Date.now()).format("YYYY-MM-DD_h-mm-ss-a")}.${newBackgroundImage.ext}`
     const data = await uploadFile({ Key }, newBackgroundImage.src, oldBackgroundImageSrc)
     const page = await Page.findOneAndUpdate(
       { _id, brandName },
