@@ -13,7 +13,7 @@ const PageSchema = new Schema({
   sections: [{ type: Schema.Types.ObjectId, ref: 'Section' }],
   slug: { type: String },
   values: {
-    name: { type: String, trim: true, minlength: 1, maxlength: 1000, unique: true },
+    name: { type: String, trim: true, minlength: 1, maxlength: 1000 },
     backgroundColor: { type: String, trim: true, minlength: 1, default: 'rgb(255,255,255)', maxlength: 50 },
     backgroundPosition: { type: String, trim: true, maxlength: 50 }
   },
@@ -31,6 +31,17 @@ function autopopulate(next) {
 
 PageSchema.pre('find', autopopulate)
 PageSchema.pre('findOne', autopopulate)
+
+PageSchema.pre('save', async function(next) {
+  const page = this
+  try {
+    const existingPage = await Page.findOne({ brandName: page.brandName, slug: page.slug })
+    if (existingPage) throw 'try a different name, that page already exists'
+  } catch (error) {
+    Promise.reject(error)
+  }
+  next()
+})
 
 PageSchema.post('findOneAndRemove', function(doc, next) {
   if (doc.backgroundImage && doc.backgroundImage.src) {
