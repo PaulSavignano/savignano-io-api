@@ -193,11 +193,12 @@ const BrandSchema = new Schema({
     values: {
       descriptionColor: { type: String, trim: true, maxlength: 50 },
       detailColor: { type: String, trim: true, maxlength: 50 },
+      detailPageBackgroundColor: { type: String, trim: true, maxlength: 50 },
       flex: { type: String, trim: true, default: '1 1 auto', maxlength: 50 },
-      nameColor: { type: String, trim: true, maxlength: 50 },
-      nameTextShadow: { type: String, trim: true, maxlength: 50 },
       margin: { type: String, trim: true, default: '16px', maxlength: 50 },
-      mediaElevation: { type: Number, trim: true, default: 3, max: 24, min: 0 }
+      mediaElevation: { type: Number, trim: true, default: 3, max: 24, min: 0 },
+      nameColor: { type: String, trim: true, maxlength: 50 },
+      nameTextShadow: { type: String, trim: true, maxlength: 50 }
     }
   },
   typography: {
