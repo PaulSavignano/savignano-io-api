@@ -8,14 +8,17 @@ import slugIt from '../utils/slugIt'
 
 
 export const add = (req, res) => {
+  console.log('trying to add page')
   const {
     body: {
       values: { name }
     },
     params: { brandName }
   } = req
+  console.log('name', name, 'brandName', brandName)
   Page.findOne({ 'values.name': name, brandName })
   .then(page => {
+    console.log('found the page', page)
     if (!page) {
       const newPage = new Page({
         brandName,
