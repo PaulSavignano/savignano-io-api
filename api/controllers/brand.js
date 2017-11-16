@@ -636,7 +636,7 @@ export const updatePalette = (req, res) => {
 }
 
 export const updateProductStyle = (req, res) => {
-  if (!ObjectID.isValid(_id)) return res.status(404).send({ error: 'Invalide id'})
+  if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalide id'})
   const {
     body: { values },
     params: { _id, brandName }

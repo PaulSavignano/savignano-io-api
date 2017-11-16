@@ -54,11 +54,8 @@ export const update = async (req, res) => {
     params: { _id, brandName }
   } = req
   try {
-    const existingPage = await Page.findOne({ _id, brandName })
-    if (existingPage.values.name !== values.name) {
-      const nameAlreadyExists = await Page.findOne({ 'values.name': values.name, brandName })
-      if (nameAlreadyExists) throw 'That page name already exists'
-    }
+    const existingPage = await Page.findOne({ brandName, 'values.name': values.name })
+    if (nameAlreadyExists) throw 'Try a different name, that page already exists'
     const slug = slugIt(values.name)
     const page = await Page.findOneAndUpdate(
       { _id, brandName },
