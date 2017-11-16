@@ -35,7 +35,7 @@ PageSchema.pre('findOne', autopopulate)
 PageSchema.pre('save', async function(next) {
   const page = this
   try {
-    const existingPage = await Page.findOne({ brandName: page.brandName, slug: page.slug })
+    const existingPage = await Page.findOne({ brandName: page.brandName, 'values.name': page.values.name })
     if (existingPage) throw 'try a different name, that page already exists'
   } catch (error) {
     Promise.reject(error)
