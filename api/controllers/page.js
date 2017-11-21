@@ -18,7 +18,6 @@ export const add = (req, res) => {
   console.log('name', name, 'brandName', brandName)
   Page.findOne({ 'values.name': name, brandName })
   .then(page => {
-    console.log('found the page', page)
     if (!page) {
       const newPage = new Page({
         brandName,

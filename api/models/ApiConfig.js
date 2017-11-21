@@ -4,6 +4,7 @@ const ApiConfigSchema = new Schema({
   brandName: { type: String, maxlength: 90, required: true, unique: true },
   values: {
     gmailUser: { type: String, trim: true, maxlength: 150 },
+    moverbaseKey: { type: String, trim: true, maxlength: 150 },
     oauthAccessToken: { type: String, trim: true, maxlength: 150 },
     oauthClientId: { type: String, trim: true, maxlength: 150 },
     oauthClientSecret: { type: String, trim: true, maxlength: 150 },

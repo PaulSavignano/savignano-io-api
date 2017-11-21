@@ -22,16 +22,16 @@ const SectionSchema = new Schema({
   page: { type: Schema.ObjectId, ref: 'Page' },
   pageSlug: { type: String, trim: true, maxlength: 100 },
   values: {
-    alignItems: { type: String, trim: true, maxlength: 50 },
+    alignItems: { type: String, enum: ['column nowrap','column wrap-reverse','column wrap','row nowrap','row wrap-reverse','row wrap']},
     backgroundColor: { type: String, trim: true, maxlength: 50 },
     backgroundPosition: { type: String, trim: true, maxlength: 50 },
-    flexFlow: { type: String, trim: true, default: 'row wrap', maxlength: 50 },
-    justifyContent: { type: String, trim: true, default: 'space-between', maxlength: 50 },
+    flexFlow: { type: String, enum: ['column nowrap','column wrap-reverse', 'column wrap','row nowrap','row wrap-reverse','row wrap']},
+    justifyContent: { type: String, enum: ['center','flex-end','flex-start','space-around','space-between']},
     kind: { type: String, trim: true, default: 'Flex', maxlength: 50 },
     margin: { type: String, trim: true, default: '0 auto', maxlength: 50 },
     maxWidth: { type: String, trim: true, default: '1044px', maxlength: 50 },
     minHeight: { type: String, trim: true, default: '90px', maxlength: 50 },
-    padding: { type: String, trim: true, maxlength: 50 },
+    padding: { type: String, trim: true, maxlength: 50, default: '4vw 0' },
     pageLink: { type: String, trim: true, maxlength: 50 },
   }
 }, {
