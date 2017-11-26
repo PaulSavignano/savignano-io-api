@@ -7,6 +7,7 @@ import Hero from './Hero'
 import Product from './Product'
 
 import { deleteFile } from '../utils/s3'
+import { alignItems, flexFlow, justifyContent } from '../utils/fieldOptions'
 
 const SectionSchema = new Schema({
   backgroundImage: {
@@ -22,11 +23,11 @@ const SectionSchema = new Schema({
   page: { type: Schema.ObjectId, ref: 'Page' },
   pageSlug: { type: String, trim: true, maxlength: 100 },
   values: {
-    alignItems: { type: String, enum: ['column nowrap','column wrap-reverse','column wrap','row nowrap','row wrap-reverse','row wrap']},
+    alignItems: { type: String, enum: alignItems },
     backgroundColor: { type: String, trim: true, maxlength: 50 },
     backgroundPosition: { type: String, trim: true, maxlength: 50 },
-    flexFlow: { type: String, enum: ['column nowrap','column wrap-reverse', 'column wrap','row nowrap','row wrap-reverse','row wrap']},
-    justifyContent: { type: String, enum: ['center','flex-end','flex-start','space-around','space-between']},
+    flexFlow: { type: String, enum: flexFlow },
+    justifyContent: { type: String, enum: justifyContent },
     kind: { type: String, trim: true, default: 'Flex', maxlength: 50 },
     margin: { type: String, trim: true, default: '0 auto', maxlength: 50 },
     maxWidth: { type: String, trim: true, default: '1044px', maxlength: 50 },

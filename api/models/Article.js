@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 import { deleteFile } from '../utils/s3'
+import { flexFlow } from '../utils/fieldOptions'
 
 const ArticleSchema = new Schema({
   brandName: { type: String, maxlength: 90, required: true },
@@ -18,7 +19,7 @@ const ArticleSchema = new Schema({
     button1Text: { type: String, trim: true, maxlength: 50 },
     button2Link: { type: String, trim: true, maxlength: 50 },
     button2Text: { type: String, trim: true, maxlength: 50 },
-    flexFlow: { type: String, enum: ['column nowrap','column wrap-reverse', 'column wrap','row nowrap','row wrap-reverse','row wrap']},
+    flexFlow: { type: String, enum: flexFlow },
     h1Text: { type: String, trim: true, default: 'Heading 1', maxlength: 500 },
     h2Text: { type: String, trim: true, default: 'Heading 2', maxlength: 500 },
     h3Text: { type: String, trim: true, default: 'Heading 3', maxlength: 500 },

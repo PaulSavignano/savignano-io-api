@@ -22,6 +22,8 @@ import products from './routes/products'
 import sections from './routes/sections'
 import users from './routes/users'
 
+import moverbase from './moverbase/routes/moverbase'
+
 const app = express()
 const port = process.env.PORT
 
@@ -49,6 +51,8 @@ app.use('/api/pages', pages)
 app.use('/api/products', products)
 app.use('/api/sections', sections)
 app.use('/api/users', users)
+
+app.use('/api/moverbase', moverbase)
 
 app.get('/', (req, res) => {
   res.send(`

@@ -28,10 +28,7 @@ users.delete('/:brandName', authenticate([ 'user', 'admin', 'owner' ]), remove)
 users.post('/:brandName/signin', signin)
 users.post('/:brandName/recovery', recovery)
 users.post('/:brandName/reset/:resetToken', reset)
-
 users.post('/:brandName/contact', contact)
-users.post('/:brandName/request-estimate', requestEstimate)
-
 users.post('/:brandName/admin', authenticate([ 'owner' ]), adminAdd)
 users.patch('/:brandName/admin/:_id', authenticate([ 'owner']), adminUpdate)
 users.delete('/:brandName/admin/:_id', authenticate([ 'owner' ]), adminRemove)
