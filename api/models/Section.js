@@ -32,7 +32,7 @@ const SectionSchema = new Schema({
     margin: { type: String, trim: true, default: '0 auto', maxlength: 50 },
     maxWidth: { type: String, trim: true, default: '1044px', maxlength: 50 },
     minHeight: { type: String, trim: true, default: '90px', maxlength: 50 },
-    padding: { type: String, trim: true, maxlength: 50, default: '4vw 0' },
+    padding: { type: String, trim: true, maxlength: 50, default: '3vw 0' },
     pageLink: { type: String, trim: true, maxlength: 50 },
   }
 }, {

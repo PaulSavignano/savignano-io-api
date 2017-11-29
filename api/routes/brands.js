@@ -28,6 +28,7 @@ import {
   updateHeroStyle,
   updatePalette,
   updateProductStyle,
+  updateSocialMedia,
   updateTypography,
   remove
 } from '../controllers/brand'
@@ -66,6 +67,7 @@ brands.patch('/:brandName/:_id/footer/update-values', authenticate(['admin']), u
 brands.patch('/:brandName/:_id/herostyle/update-values', authenticate(['admin']), updateHeroStyle)
 brands.patch('/:brandName/:_id/palette/update-values', authenticate(['admin']), updatePalette)
 brands.patch('/:brandName/:_id/productstyle/update-values', authenticate(['admin']), updateProductStyle)
+brands.patch('/:brandName/:_id/socialmedia/update-values', authenticate(['admin']), updateSocialMedia)
 brands.patch('/:brandName/:_id/typography/update-values', authenticate(['admin']), updateTypography)
 brands.delete('/:brandName/:_id', authenticate(['admin']), remove)
 

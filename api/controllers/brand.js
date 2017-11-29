@@ -651,6 +651,23 @@ export const updateProductStyle = (req, res) => {
 }
 
 
+export const updateSocialMedia = (req, res) => {
+  if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
+  const {
+    body: { values },
+    params: { _id, brandName }
+  } = req
+  console.log('values', values)
+  Brand.findOneAndUpdate(
+    { _id, brandName },
+    { $set: { socialMedia: { values }}},
+    { new: true }
+  )
+  .then(doc => res.send(doc))
+  .catch(error => { console.error(error); res.status(400).send({ error })})
+}
+
+
 export const updateTypography = (req, res) => {
   if (!ObjectID.isValid(req.params._id)) return res.status(404).send({ error: 'Invalid id'})
   const {

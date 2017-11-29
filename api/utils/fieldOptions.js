@@ -10,9 +10,15 @@ export const flexFlow = [
   'column nowrap',
   'column wrap-reverse',
   'column wrap',
+  'column-reverse nowrap',
+  'column-reverse wrap-reverse',
+  'column-reverse wrap',
   'row nowrap',
   'row wrap-reverse',
   'row wrap',
+  'row-reverse nowrap',
+  'row-reverse wrap-reverse',
+  'row-reverse wrap',
 ]
 
 export const justifyContent = [

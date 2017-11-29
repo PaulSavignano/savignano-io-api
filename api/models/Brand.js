@@ -84,25 +84,17 @@ const BrandSchema = new Schema({
       city: { type: String, trim: true, maxlength: 100 },
       description: { type: String, trim: true, maxlength: 1000 },
       email: { type: String, trim: true, maxlength: 100 },
-      facebook: { type: String, trim: true, maxlength: 150 },
-      github: { type: String, trim: true, maxlength: 150 },
-      google: { type: String, trim: true, maxlength: 150 },
       googleAnalyticsUA: { type: String, trim: true, maxlength: 150 },
       imageBorderRadius: { type: String, trim: true, maxlength: 50 },
-      instagram: { type: String, trim: true, maxlength: 150 },
       keywords: { type: String, trim: true, maxlength: 1000 },
       license: { type: String, trim: true, maxlength: 100 },
-      linkedin: { type: String, trim: true, maxlength: 150 },
       name: { type: String, trim: true, default: 'Brand', maxlength: 100 },
       phone: { type: String, trim: true, maxlength: 50 },
       phoneStyle: { type: String, trim: true, maxlength: 1000 },
       state: { type: String, trim: true, maxlength: 25 },
       street: { type: String, trim: true, maxlength: 100 },
-      stripePkTest: { type: String, trim: true, maxlength: 500 },
       stripePkLive: { type: String, trim: true, maxlength: 500 },
-      twitter: { type: String, trim: true, maxlength: 150 },
-      yelp: { type: String, trim: true, maxlength: 150 },
-      youtube: { type: String, trim: true, maxlength: 150 },
+      stripePkTest: { type: String, trim: true, maxlength: 500 },
       zip: { type: String, trim: true, maxlength: 50 },
     }
   },
@@ -209,6 +201,18 @@ const BrandSchema = new Schema({
       mediaElevation: { type: Number, trim: true, default: 3, max: 24, min: 0 },
       nameColor: { type: String, trim: true, maxlength: 50 },
       nameTextShadow: { type: String, trim: true, maxlength: 50 }
+    }
+  },
+  socialMedia: {
+    values: {
+      facebook: { type: String, trim: true, maxlength: 150 },
+      github: { type: String, trim: true, maxlength: 150 },
+      googleplus: { type: String, trim: true, maxlength: 150 },
+      instagram: { type: String, trim: true, maxlength: 150 },
+      linkedin: { type: String, trim: true, maxlength: 150 },
+      twitter: { type: String, trim: true, maxlength: 150 },
+      yelp: { type: String, trim: true, maxlength: 150 },
+      youtube: { type: String, trim: true, maxlength: 150 },
     }
   },
   typography: {
