@@ -174,7 +174,7 @@ const BrandSchema = new Schema({
   },
   palette: {
     values: {
-      primary1Color: { type: String, trim: true, default: '#00BCD4', maxlength: 50 },
+      primary1Color: { type: String, trim: true, default: 'rgb(0,188,212)', maxlength: 50 },
       primary2Color: { type: String, trim: true, default: '#0097A7', maxlength: 50 },
       primary3Color: { type: String, trim: true, default: '#BDBDBD', maxlength: 50 },
       accent1Color: { type: String, trim: true, default: '#FF4081', maxlength: 50 },
@@ -222,21 +222,17 @@ const BrandSchema = new Schema({
       h1FontFamily: { type: String, trim: true, maxlength: 50},
       h1FontSize: { type: String, trim: true, default: 'calc(2em + .5vw)', maxlength: 50 },
       h1LetterSpacing: { type: String, trim: true, default: '1px', maxlength: 50 },
-      h1Margin: { type: String, trim: true, maxlength: 50 },
       h2FontFamily: { type: String, trim: true, maxlength: 50 },
       h2FontSize: { type: String, trim: true, default: '1.5em', maxlength: 50 },
       h2LetterSpacing: { type: String, trim: true, default: '1px', maxlength: 50 },
-      h2Margin: { type: String, trim: true, maxlength: 50 },
       h3FontFamily: { type: String, trim: true, maxlength: 50 },
       h3FontSize: { type: String, trim: true, default: '1.17em', maxlength: 50 },
       h3LetterSpacing: { type: String, trim: true, default: '1px', maxlength: 50 },
       h3LineHeight: { type: String, trim: true, maxlength: 50 },
-      h3Margin: { type: String, trim: true, maxlength: 50 },
       lineHeight: { type: String, trim: true, maxlength: 50},
       pFontFamily: { type: String, trim: true, maxlength: 50 },
       pFontSize: { type: String, trim: true, default: '16px', maxlength: 50 },
       pLetterSpacing: { type: String, trim: true, maxlength: 50 },
-      pMargin: { type: String, trim: true, maxlength: 50 },
     }
   }
 },{
