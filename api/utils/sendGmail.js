@@ -76,7 +76,7 @@ const sendGmail = async ({
         p, div, ol {
           font-family: ${textFont};
         }
-        a {
+        a, .ii a[href] {
           text-decoration: none;
           color: inherit;
           font-family: ${textFont};
@@ -87,8 +87,10 @@ const sendGmail = async ({
          <main>
           ${body}
           <br/><br/>
-          <a href=${brandName} style="text-decoration: none; color: ${color}; font-family: ${fontFamily}; font-size: ${fontSize}; font-weight: ${fontWeight}; letter-spacing: ${letterSpacing};">
-            ${image && image.src ? `<img src="assets.savignano.io/${image.src}" alt="item" height="64px" width="auto"/>` : ''}
+          <a
+            href=${brandName}
+            style="text-decoration: none; color: ${color}; font-family: ${fontFamily}; font-size: ${fontSize}; font-weight: ${fontWeight}; letter-spacing: ${letterSpacing};">
+            ${image && image.src ? `<img src="assets.savignano.io/${image.src}" alt="item" height="60px" width="auto"/>` : ''}
             <div>
               ${name}
             </div>
