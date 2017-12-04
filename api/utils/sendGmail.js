@@ -87,14 +87,10 @@ const sendGmail = async ({
          <main>
           ${body}
           <br/><br/>
-          <a href=${brandName}>
+          <a href=${brandName} style="text-decoration: none; color: ${color}; font-family: ${fontFamily}; font-size: ${fontSize}; font-weight: ${fontWeight}; letter-spacing: ${letterSpacing};">
             ${image && image.src ? `<img src="assets.savignano.io/${image.src}" alt="item" height="64px" width="auto"/>` : ''}
             <div>
-              <span
-                style="text-decoration: none; color: ${color}; font-family: ${fontFamily}; font-size: ${fontSize}; font-weight: ${fontWeight}; letter-spacing: ${letterSpacing};"
-              >
-                ${name}
-              </span>
+              ${name}
             </div>
           </a>
           <div>
