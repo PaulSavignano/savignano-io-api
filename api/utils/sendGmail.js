@@ -78,7 +78,7 @@ const sendGmail = async ({
         }
         a {
           text-decoration: none;
-          color: inherit;
+          color: inherit !important;
           font-family: ${textFont};
         }
       </style>
