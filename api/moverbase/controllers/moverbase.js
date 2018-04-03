@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 
+import sendGmail from '../../utils/sendGmail'
 import ApiConfig from '../../models/ApiConfig'
 
 export const requestEstimate = async (req, res) => {
@@ -19,7 +20,7 @@ export const requestEstimate = async (req, res) => {
   } = req
   const moverbaseApiKey = await ApiConfig.findOne({ brandName })
   if (!moverbaseApiKey) throw 'Sorry, there was no moverbase api key found'
-  const auth = 'Basic ' + new Buffer(moverbaseApiKey + ':').toString('base64')
+  const auth = 'Basic ' + new Buffer(moverbaseApiKey.values.moverbaseKey + ':').toString('base64')
   try {
     const response = await fetch(`https://api.moverbase.com/v1/leads/`, {
       method: 'POST',
@@ -39,6 +40,7 @@ export const requestEstimate = async (req, res) => {
        note
       })
     })
+    console.log('moverbase res: ', response)
     const json = await response.json()
     const emailInfo = await sendGmail({
       brandName,
