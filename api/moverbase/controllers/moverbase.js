@@ -12,6 +12,7 @@ export const requestEstimate = async (req, res) => {
     const moverbaseApiKey = await ApiConfig.findOne({ brandName })
     if (!moverbaseApiKey) throw 'Sorry, there was no moverbase api key found'
     const auth = 'Basic ' + new Buffer(moverbaseApiKey.values.moverbaseKey + ':').toString('base64')
+    console.log('moverbase body: ', body)
     console.log('moverbase api key: ', moverbaseApiKey.values.moverbaseKey)
     console.log('moverbase auth: ', auth)
     const response = await fetch(`https://api.moverbase.com/v1/leads/`, {
@@ -33,7 +34,7 @@ export const requestEstimate = async (req, res) => {
       toBody: `<p>Thank you for requesting a free estimate.  We will contact you shortly!</p>`,
       fromSubject: `New Estimate Request`,
       fromBody: `
-        <p>${bod.firstName} just contacted you through ${brandName}.</p>
+        <p>${body.firstName} just contacted you through ${brandName}.</p>
         ${body.phone && `<div>Phone: ${body.phone}</div>`}
         <div>Email: ${body.email}</div>
         <div>Note: ${body.note}</div>
