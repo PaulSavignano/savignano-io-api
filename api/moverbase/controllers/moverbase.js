@@ -5,17 +5,7 @@ import ApiConfig from '../../models/ApiConfig'
 
 export const requestEstimate = async (req, res) => {
   const {
-    body: {
-      date,
-      firstName,
-      lastName,
-      phone,
-      email,
-      from,
-      to,
-      size,
-      note
-    },
+    body,
     params: { brandName }
   } = req
   const moverbaseApiKey = await ApiConfig.findOne({ brandName })
@@ -28,17 +18,7 @@ export const requestEstimate = async (req, res) => {
         'Content-Type': 'application/json',
         Authorization: auth
       },
-      body: JSON.stringify({
-       date,
-       firstName,
-       lastName,
-       phone,
-       email,
-       from: { postalCode: from },
-       to: { postalCode: to },
-       size: { title: size },
-       note
-      })
+      body: JSON.stringify({ ...body })
     })
     console.log('moverbase res: ', response)
     const json = await response.json()
