@@ -22,7 +22,7 @@ export const requestEstimate = async (req, res) => {
       body: JSON.stringify({...body})
     })
     console.log('res: ', res)
-    const json = await response.json()
+    const json = await res.json()
     console.log('json: ', json)
     res.status(200).send()
   } catch (error) {
