@@ -11,7 +11,7 @@ export const requestEstimate = async (req, res) => {
   try {
     const moverbaseApiKey = await Config.findOne({ appName })
     if (!moverbaseApiKey) throw 'Sorry, there was no moverbase api key found'
-    const auth = `Basic ${new Buffer(moverbaseApiKey).toString('base64')}:`
+    const auth = `Basic ${new Buffer(moverbaseApiKey + ':').toString('base64')}`
     const response = await fetch(`https://api.moverbase.com/v1/leads/`, {
       method: 'POST',
       headers: {
@@ -30,7 +30,9 @@ export const requestEstimate = async (req, res) => {
        note
       })
     })
+    console.log('reponse: ', response)
     const json = await response.json()
+    console.log('json: ', json)
     res.status(200).send()
   } catch (error) {
     console.error(error)
