@@ -12,7 +12,7 @@ export const requestEstimate = async (req, res) => {
     const config = await ApiConfig.findOne({ brandName })
     if (!config) throw 'Sorry, there was no config found'
     const auth = `Basic ${new Buffer(config.values.moverbaseKey + ':').toString('base64')}`
-    const res = await fetch(`https://api.moverbase.com/v1/leads/`, {
+    const response = await fetch(`https://api.moverbase.com/v1/leads/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,6 +20,7 @@ export const requestEstimate = async (req, res) => {
       },
       body: JSON.stringify(body)
     })
+    if (!response) throw 'Post to moverbase failed'
     const { email, firstName, phone, note } = body
     const emailInfo = await sendGmail({
       brandName,
