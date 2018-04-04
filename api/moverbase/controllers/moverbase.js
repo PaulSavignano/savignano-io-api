@@ -12,14 +12,15 @@ export const requestEstimate = async (req, res) => {
     const config = await ApiConfig.findOne({ brandName })
     if (!config) throw 'Sorry, there was no config found'
     const auth = `Basic ${new Buffer(config.values.moverbaseKey + ':').toString('base64')}`
+    console.log('body is: ', body)
     console.log('auth: ', auth)
     const res = await fetch(`https://api.moverbase.com/v1/leads/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: auth
+        'Authorization': auth
       },
-      body: JSON.stringify({...body})
+      body: JSON.stringify(body)
     })
     console.log('res: ', res)
     const json = await res.json()
