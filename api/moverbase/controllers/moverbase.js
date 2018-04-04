@@ -9,7 +9,7 @@ export const requestEstimate = async (req, res) => {
     params: { brandName }
   } = req
   try {
-    const moverbaseApiKey = await ApiConfig.findOne({ appName })
+    const moverbaseApiKey = await ApiConfig.findOne({ brandName })
     console.log('moverbaseApiKey: ', moverbaseApiKey)
     if (!moverbaseApiKey) throw 'Sorry, there was no moverbase api key found'
     const auth = `Basic ${new Buffer(moverbaseApiKey + ':').toString('base64')}`
@@ -20,17 +20,7 @@ export const requestEstimate = async (req, res) => {
         'Content-Type': 'application/json',
         Authorization: auth
       },
-      body: JSON.stringify({
-       date,
-       firstName,
-       lastName,
-       phone,
-       email,
-       from: { postalCode: from },
-       to: { postalCode: to },
-       size: { title: size },
-       note
-      })
+      body: JSON.stringify({...body})
     })
     console.log('reponse: ', response)
     const json = await response.json()
